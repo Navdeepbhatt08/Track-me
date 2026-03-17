@@ -1,0 +1,136 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.navbar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 160px;
+}
+
+.navbar__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+}
+
+.navbar__title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.navbar__title strong {
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+.navbar__title span {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.78);
+  font-weight: 600;
+  font-size: 14px;
+}
+.navbar__link:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.navbar__link[aria-current="page"] {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar__button {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.navbar__button:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.navbar__menuBtn {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .navbar__brand {
+    min-width: auto;
+  }
+
+  .navbar__nav {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 62px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 14px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .navbar__nav.is-open {
+    display: flex;
+  }
+
+  .navbar__link {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .navbar__menuBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
