@@ -10,8 +10,8 @@ function StatCard({ label, value, badge }) {
     <Card className="p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-slate-600">{label}</p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">{label}</p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
             {value}
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
           label="Balance"
           value={formatCurrency(stats.balance, settings.currency)}
           badge={
-            <span className="inline-flex items-center rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-800 ring-1 ring-slate-100">
+            <span className="inline-flex items-center rounded-full bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-800 ring-1 ring-slate-100 dark:bg-white/10 dark:text-white dark:ring-white/10">
               Net
             </span>
           }
@@ -94,7 +94,7 @@ export default function DashboardPage() {
           label="Income"
           value={formatCurrency(stats.income, settings.currency)}
           badge={
-            <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">
+            <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-500/20">
               + In
             </span>
           }
@@ -103,7 +103,7 @@ export default function DashboardPage() {
           label="Expenses"
           value={formatCurrency(stats.expense, settings.currency)}
           badge={
-            <span className="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-800 ring-1 ring-rose-100">
+            <span className="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-800 ring-1 ring-rose-100 dark:bg-rose-500/10 dark:text-rose-300 dark:ring-rose-500/20">
               - Out
             </span>
           }
@@ -112,7 +112,7 @@ export default function DashboardPage() {
           label="Top category"
           value={stats.topCategory}
           badge={
-            <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-100">
+            <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-100 dark:bg-blue-500/10 dark:text-blue-300 dark:ring-blue-500/20">
               Focus
             </span>
           }
@@ -163,8 +163,8 @@ export default function DashboardPage() {
                   recent.map((t) => (
                     <tr key={t.id} className="border-t border-slate-100 text-sm dark:border-white/10">
                       <td className="py-3 pr-4">
-                        <div className="font-semibold text-slate-900 dark:text-slate-100">{t.title}</div>
-                        <div className="text-xs text-slate-500 dark:text-white">{t.method}</div>
+                        <div className="font-semibold text-slate-900 dark:text-white">{t.title}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-300">{t.method}</div>
                       </td>
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200">
@@ -173,8 +173,11 @@ export default function DashboardPage() {
                       </td>
                       <td className="px-4 py-3 text-slate-600 dark:text-white">{t.date}</td>
                       <td
-                        className={`py-3 pl-4 text-right font-semibold tabular-nums ${t.type === 'income' ? 'text-emerald-700' : 'text-rose-700'
-                          }`}
+                        className={`py-3 pl-4 text-right font-semibold tabular-nums ${
+                          t.type === 'income'
+                            ? 'text-emerald-700 dark:text-emerald-300'
+                            : 'text-rose-700 dark:text-rose-300'
+                        }`}
                       >
                         {t.type === 'income' ? '+' : '-'}
                         {formatCurrency(t.amount, settings.currency)}
@@ -188,32 +191,33 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="p-5">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Monthly budget</h2>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-white">Monthly budget</h2>
           <p className="mt-0.5 text-sm text-slate-600 dark:text-white">
             Track progress against your budget.
           </p>
 
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-semibold text-slate-700">Used</span>
-              <span className="font-semibold text-slate-900">{stats.budgetUsed}%</span>
+              <span className="font-semibold text-slate-700 dark:text-white">Used</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{stats.budgetUsed}%</span>
             </div>
-            <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-100">
+            <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
               <div
-                className={`h-full rounded-full ${stats.budgetUsed >= 90 ? 'bg-rose-500' : 'bg-blue-600'
-                  }`}
+                className={`h-full rounded-full ${
+                  stats.budgetUsed >= 90 ? 'bg-rose-500' : 'bg-blue-600'
+                }`}
                 style={{ width: `${stats.budgetUsed}%` }}
               />
             </div>
             <div className="mt-3 text-sm text-slate-600 dark:text-white">
               Budget:{' '}
-              <span className="font-semibold text-slate-900 dark:text-slate-100">
+              <span className="font-semibold text-slate-900 dark:text-white">
                 {formatCurrency(stats.budget, settings.currency)}
               </span>
             </div>
             <div className="mt-1 text-sm text-slate-600 dark:text-white">
               Spent:{' '}
-              <span className="font-semibold text-slate-900 dark:text-slate-100">
+              <span className="font-semibold text-slate-900 dark:text-white">
                 {formatCurrency(stats.expense, settings.currency)}
               </span>
             </div>
@@ -232,4 +236,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
