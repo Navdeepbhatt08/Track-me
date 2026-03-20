@@ -58,14 +58,14 @@ export default function DashboardPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+          <p className="text-sm font-medium text-slate-600 dark:text-white">
             Welcome back,{' '}
             <span className="text-slate-900 dark:text-slate-100">{settings.name}</span>
           </p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
             Dashboard
           </h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          <p className="mt-1 text-sm text-slate-600 dark:text-white">
             Quick snapshot of your spending and income.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 ">
         <StatCard
           label="Balance"
           value={formatCurrency(stats.balance, settings.currency)}
@@ -126,7 +126,7 @@ export default function DashboardPage() {
               <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                 Recent transactions
               </h2>
-              <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-0.5 text-sm text-slate-600 dark:text-white">
                 Latest activity across categories.
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function DashboardPage() {
           <div className="mt-4 overflow-x-auto">
             <table className="w-full border-separate border-spacing-0">
               <thead>
-                <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-white">
                   <th className="py-3 pr-4">Title</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Date</th>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
               <tbody>
                 {recent.length === 0 ? (
                   <tr>
-                    <td className="py-4 text-sm text-slate-600 dark:text-slate-400" colSpan={4}>
+                    <td className="py-4 text-sm text-slate-600 dark:text-white" colSpan={4}>
                       No transactions yet. Add your first one from{' '}
                       <Link className="font-semibold text-blue-700 dark:text-blue-300" to="/add">
                         Add Transaction
@@ -164,18 +164,17 @@ export default function DashboardPage() {
                     <tr key={t.id} className="border-t border-slate-100 text-sm dark:border-white/10">
                       <td className="py-3 pr-4">
                         <div className="font-semibold text-slate-900 dark:text-slate-100">{t.title}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">{t.method}</div>
+                        <div className="text-xs text-slate-500 dark:text-white">{t.method}</div>
                       </td>
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200">
                           {t.category}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{t.date}</td>
+                      <td className="px-4 py-3 text-slate-600 dark:text-white">{t.date}</td>
                       <td
-                        className={`py-3 pl-4 text-right font-semibold tabular-nums ${
-                          t.type === 'income' ? 'text-emerald-700' : 'text-rose-700'
-                        }`}
+                        className={`py-3 pl-4 text-right font-semibold tabular-nums ${t.type === 'income' ? 'text-emerald-700' : 'text-rose-700'
+                          }`}
                       >
                         {t.type === 'income' ? '+' : '-'}
                         {formatCurrency(t.amount, settings.currency)}
@@ -190,7 +189,7 @@ export default function DashboardPage() {
 
         <Card className="p-5">
           <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Monthly budget</h2>
-          <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+          <p className="mt-0.5 text-sm text-slate-600 dark:text-white">
             Track progress against your budget.
           </p>
 
@@ -201,19 +200,18 @@ export default function DashboardPage() {
             </div>
             <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-100">
               <div
-                className={`h-full rounded-full ${
-                  stats.budgetUsed >= 90 ? 'bg-rose-500' : 'bg-blue-600'
-                }`}
+                className={`h-full rounded-full ${stats.budgetUsed >= 90 ? 'bg-rose-500' : 'bg-blue-600'
+                  }`}
                 style={{ width: `${stats.budgetUsed}%` }}
               />
             </div>
-            <div className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+            <div className="mt-3 text-sm text-slate-600 dark:text-white">
               Budget:{' '}
               <span className="font-semibold text-slate-900 dark:text-slate-100">
                 {formatCurrency(stats.budget, settings.currency)}
               </span>
             </div>
-            <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            <div className="mt-1 text-sm text-slate-600 dark:text-white">
               Spent:{' '}
               <span className="font-semibold text-slate-900 dark:text-slate-100">
                 {formatCurrency(stats.expense, settings.currency)}
