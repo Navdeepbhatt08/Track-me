@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { cx } from '../lib/utils'
 import { useTheme } from '../state/ThemeContext.jsx'
 import { useAuth } from '../state/AuthContext.jsx'
@@ -68,6 +68,16 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const { isAuthed, logout } = useAuth()
+  const navigate = useNavigate()
+
+
+  const handleLogout = () => {
+  const confirmed = window.confirm("Are you sure you want to logout?");
+  if (confirmed) {
+    logout();
+    navigate('/login');
+  }
+}
 
   const items = [
     { label: 'Dashboard', to: '/' },
@@ -123,7 +133,7 @@ export default function Navbar() {
             <button
               type="button"
               className="hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40 md:inline-flex dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900"
-              onClick={logout}
+              onClick={handleLogout}
             >
               Logout
             </button>
@@ -136,7 +146,6 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* ← Slide switch replaces the old emoji button */}
           <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
 
           <button
@@ -159,7 +168,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900"
-                  onClick={() => { logout(); setOpen(false) }}
+                  onClick={() => { handleLogout(); setOpen(false) }}
                 >
                   Logout
                 </button>
@@ -172,7 +181,6 @@ export default function Navbar() {
                   Login
                 </Link>
               )}
-              {/* Switch also visible in mobile menu */}
               <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
             </div>
             {items.map((it) => (
