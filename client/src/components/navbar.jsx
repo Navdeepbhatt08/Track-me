@@ -7,6 +7,63 @@ import { useAuth } from '../state/AuthContext.jsx'
 const navLinkBase =
   'inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition'
 
+function SunIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="8" cy="8" r="3" />
+      <line x1="8" y1="1" x2="8" y2="3" />
+      <line x1="8" y1="13" x2="8" y2="15" />
+      <line x1="1" y1="8" x2="3" y2="8" />
+      <line x1="13" y1="8" x2="15" y2="8" />
+      <line x1="3.22" y1="3.22" x2="4.64" y2="4.64" />
+      <line x1="11.36" y1="11.36" x2="12.78" y2="12.78" />
+      <line x1="3.22" y1="12.78" x2="4.64" y2="11.36" />
+      <line x1="11.36" y1="4.64" x2="12.78" y2="3.22" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M13.5 10A6 6 0 0 1 6 2.5a6 6 0 1 0 7.5 7.5z" />
+    </svg>
+  )
+}
+
+function ThemeSwitch({ theme, toggleTheme }) {
+  const isDark = theme === 'dark'
+  return (
+    <label
+      className="flex cursor-pointer items-center gap-2"
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+      title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+    >
+      <div
+        onClick={toggleTheme}
+        className={cx(
+          'relative h-6 w-11 rounded-full transition-colors duration-200',
+          isDark ? 'bg-slate-700' : 'bg-slate-200',
+        )}
+      >
+        <div
+          className={cx(
+            'absolute top-[3px] left-[3px] flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white transition-transform duration-200',
+            isDark
+              ? 'translate-x-5 text-slate-600'
+              : 'translate-x-0 text-slate-500',
+          )}
+        >
+          {isDark ? <MoonIcon /> : <SunIcon />}
+        </div>
+      </div>
+      <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        {isDark ? 'Dark' : 'Light'}
+      </span>
+    </label>
+  )
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
@@ -61,7 +118,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {isAuthed ? (
             <button
               type="button"
@@ -79,17 +136,8 @@ export default function Navbar() {
             </Link>
           )}
 
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900"
-            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-          >
-            <span aria-hidden="true" className="text-lg leading-none">
-              {theme === 'dark' ? '☀' : '🌙'}
-            </span>
-          </button>
+          {/* ← Slide switch replaces the old emoji button */}
+          <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
 
           <button
             type="button"
@@ -106,15 +154,12 @@ export default function Navbar() {
       <div className={cx('md:hidden', open ? 'block' : 'hidden')}>
         <div className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
           <div className="rounded-2xl bg-white p-2 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-white/10">
-            <div className="flex gap-2 px-1 pb-2">
+            <div className="flex items-center justify-between gap-2 px-1 pb-2">
               {isAuthed ? (
                 <button
                   type="button"
                   className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900"
-                  onClick={() => {
-                    logout()
-                    setOpen(false)
-                  }}
+                  onClick={() => { logout(); setOpen(false) }}
                 >
                   Logout
                 </button>
@@ -127,6 +172,8 @@ export default function Navbar() {
                   Login
                 </Link>
               )}
+              {/* Switch also visible in mobile menu */}
+              <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
             </div>
             {items.map((it) => (
               <NavLink
