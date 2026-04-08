@@ -23,8 +23,8 @@ export default function TransactionsPage() {
       .filter((t) =>
         q
           ? String(t.title).toLowerCase().includes(q) ||
-            String(t.category).toLowerCase().includes(q) ||
-            String(t.method).toLowerCase().includes(q)
+          String(t.category).toLowerCase().includes(q) ||
+          String(t.method).toLowerCase().includes(q)
           : true,
       )
       .slice()
@@ -88,7 +88,7 @@ export default function TransactionsPage() {
               <option value="all">All</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
-                  {c}
+                  {c} 
                 </option>
               ))}
             </select>
@@ -147,7 +147,7 @@ export default function TransactionsPage() {
                         t.type === 'income' ? 'text-emerald-700' : 'text-rose-700',
                       )}
                     >
-                      {t.type === 'income' ? '+' : '-'}
+                      {t.type === 'expense' ? '-' : '+'}
                       {formatCurrency(t.amount, settings.currency)}
                     </td>
                     <td className="px-5 py-3 text-right">
@@ -160,7 +160,7 @@ export default function TransactionsPage() {
                         >
                           Edit
                         </Button>
-                        <Button
+                        <Button 
                           variant="danger"
                           size="sm"
                           onClick={() => {

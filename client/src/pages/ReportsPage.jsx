@@ -5,7 +5,7 @@ import { useExpense } from '../state/ExpenseContext'
 
 function monthKey(dateStr) {
   if (!dateStr) return ''
-  return String(dateStr).slice(0, 7) // YYYY-MM
+  return String(dateStr).slice(0, 7)
 }
 
 export default function ReportsPage() {
@@ -54,7 +54,7 @@ export default function ReportsPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-300 sm:text-3xl">
             Reports
           </h1>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
@@ -87,22 +87,22 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="p-5">
-          <div className="text-sm font-semibold text-slate-600">Income</div>
-          <div className="mt-2 text-2xl font-semibold text-slate-900">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3 ">
+        <Card className="p-5 ">
+          <div className="text-sm font-semibold text-gray-300">Income</div>
+          <div className="mt-2 text-2xl font-semibold text-white-900">
             {formatCurrency(data.income, settings.currency)}
           </div>
         </Card>
         <Card className="p-5">
-          <div className="text-sm font-semibold text-slate-600">Expenses</div>
-          <div className="mt-2 text-2xl font-semibold text-slate-900">
+          <div className="text-sm font-semibold text-gray-300">Expenses</div>
+          <div className="mt-2 text-2xl font-semibold text-white-900">
             {formatCurrency(data.expense, settings.currency)}
           </div>
         </Card>
         <Card className="p-5">
-          <div className="text-sm font-semibold text-slate-600">Net</div>
-          <div className="mt-2 text-2xl font-semibold text-slate-900">
+          <div className="text-sm font-semibold text-gray-300">Net</div>
+          <div className="mt-2 text-2xl font-semibold text-white-900">
             {formatCurrency(data.income - data.expense, settings.currency)}
           </div>
         </Card>
@@ -133,7 +133,7 @@ export default function ReportsPage() {
                     <div
                       className={cx(
                         'h-full rounded-full',
-                        r.pct >= 50 ? 'bg-rose-500' : r.pct >= 25 ? 'bg-blue-600' : 'bg-emerald-500',
+                        r.pct >= 60 ? 'bg-rose-500' : r.pct >= 25 ? 'bg-blue-600' : 'bg-emerald-500',
                       )}
                       style={{ width: `${Math.max(2, r.pct)}%` }}
                     />
