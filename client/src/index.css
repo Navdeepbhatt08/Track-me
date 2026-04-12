@@ -1,23 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
-}
-
-body {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-    Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
-}
-
 @layer base {
+  :root {
+    --brand-primary: #2563eb;
+    --brand-secondary: #4f46e5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-surface-50 font-sans text-surface-900 transition-colors duration-300 dark:bg-surface-950 dark:text-surface-50;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight;
   }
 
   a {
-    @apply text-blue-700 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200;
+    @apply text-brand-600 transition-colors hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-surface-200 hover:bg-surface-300 dark:bg-surface-800 dark:hover:bg-surface-700;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/20 bg-white/70 backdrop-blur-md dark:border-white/10 dark:bg-surface-900/60;
+  }
+  
+  .glass-card {
+    @apply border border-white/20 bg-white/40 shadow-glass backdrop-blur-lg dark:border-white/5 dark:bg-surface-900/40;
   }
 }

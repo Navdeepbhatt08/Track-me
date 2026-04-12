@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
+import Input from '../components/ui/Input'
 import { useAuth } from '../state/AuthContext'
 
 export default function SignupPage() {
@@ -14,92 +15,90 @@ export default function SignupPage() {
   const [error, setError] = useState('')
 
   return (
-    <div className="mx-auto w-full max-w-md px-4 py-10 sm:px-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-          Create account
-        </h1>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Sign up to sync your data with the backend.
-        </p>
-      </div>
-
-      <Card className="mt-6 p-5">
-        {error ? (
-          <div className="mb-4 rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-800 ring-1 ring-rose-100 dark:bg-rose-500/10 dark:text-rose-200 dark:ring-rose-500/20">
-            {error}
+    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12">
+      <div className="w-full max-w-md">
+        <div className="mb-10 text-center">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-600/10 text-brand-600 dark:bg-brand-400/10 dark:text-brand-400 mb-6 ring-1 ring-brand-600/20 shadow-xl shadow-brand-600/20">
+             <span className="font-display text-2xl font-extrabold tracking-tighter">TM</span>
           </div>
-        ) : null}
+          <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
+            Join TrackMe
+          </h1>
+          <p className="mt-4 text-base font-medium text-surface-500 dark:text-surface-400">
+            Start your journey towards professional financial management.
+          </p>
+        </div>
 
-        <form
-          className="space-y-4"
-          onSubmit={async (e) => {
-            e.preventDefault()
-            setError('')
-            setLoading(true)
-            try {
-              await signup({ name, email, password })
-              navigate('/')
-            } catch (err) {
-              setError(err.message || 'Signup failed')
-            } finally {
-              setLoading(false)
-            }
-          }}
-        >
-          <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Name
-            </label>
-            <input
+        <Card className="p-8 sm:p-10 border-white/20 dark:border-white/5" variant="default">
+          {error && (
+            <div className="mb-6 rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-800 ring-1 ring-red-100 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/20">
+              {error}
+            </div>
+          )}
+
+          <form
+            className="space-y-6"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              setError('')
+              setLoading(true)
+              try {
+                await signup({ name, email, password })
+                navigate('/')
+              } catch (err) {
+                setError(err.message || 'Signup failed')
+              } finally {
+                setLoading(false)
+              }
+            }}
+          >
+            <Input
+              label="Full Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
               required
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
-              placeholder="Your name"
+              placeholder="e.g. John Doe"
             />
-          </div>
-          <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Email
-            </label>
-            <input
+
+            <Input
+              label="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
               placeholder="you@example.com"
             />
-          </div>
-          <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Password
-            </label>
-            <input
+            
+            <Input
+              label="Access Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               required
               minLength={6}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
               placeholder="At least 6 characters"
             />
+
+            <Button type="submit" variant="primary" className="w-full py-4 text-base" disabled={loading}>
+              {loading ? 'Creating Account...' : 'Get Started'}
+            </Button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm font-medium text-surface-500 dark:text-surface-400">
+              Already a member?{' '}
+              <Link className="font-bold text-brand-600 dark:text-brand-400 hover:underline" to="/login">
+                Sign in instead
+              </Link>
+            </p>
           </div>
-
-          <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-            {loading ? 'Creating…' : 'Sign up'}
-          </Button>
-        </form>
-
-        <div className="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
-          Already have an account?{' '}
-          <Link className="font-semibold" to="/login">
-            Login
-          </Link>
-        </div>
-      </Card>
+        </Card>
+        
+        <p className="mt-8 text-center text-xs text-surface-400">
+          By signing up, you agree to our <Link to="#" className="underline">Terms of Service</Link> and <Link to="#" className="underline">Privacy Policy</Link>.
+        </p>
+      </div>
     </div>
   )
 }

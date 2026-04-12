@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
+import Input from '../components/ui/Input'
 import { cx, formatCurrency } from '../lib/utils'
 import { useExpense } from '../state/ExpenseContext'
 
@@ -32,140 +33,139 @@ export default function TransactionsPage() {
   }, [transactions, query, type, category])
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
-            Transactions
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+           <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
+            Transaction History
           </h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            Search, filter, edit, and delete your transactions.
+          <p className="text-base font-medium text-surface-500 dark:text-surface-400">
+            Manage your spending with advanced search and filters.
           </p>
         </div>
-        <Button as={Link} to="/add" variant="primary">
-          Add Transaction
+        <Button as={Link} to="/add" variant="primary" className="px-8 shadow-xl shadow-brand-600/20">
+          Add New
         </Button>
       </div>
 
-      <Card className="mt-6 p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+      <Card className="mt-10 p-6 border-white/10" variant="glass">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <div className="md:col-span-2">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Search
-            </label>
-            <input
+            <Input
+              label="Search Records"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Title, category, method..."
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+              placeholder="Filter by title, category, or payment method..."
+              className="py-2.5"
             />
           </div>
 
-          <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Type
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
+              Transaction Type
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+              className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
             >
-              <option value="all">All</option>
-              <option value="expense">Expense</option>
-              <option value="income">Income</option>
+              <option value="all">All Types</option>
+              <option value="expense">Expenses Only</option>
+              <option value="income">Income Only</option>
             </select>
           </div>
 
-          <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none ring-blue-500/20 focus:ring-4 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+              className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
             >
-              <option value="all">All</option>
+              <option value="all">All Categories</option>
               {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {c} 
-                </option>
+                <option key={c} value={c}>{c}</option>
               ))}
             </select>
           </div>
         </div>
       </Card>
 
-      <Card className="mt-4">
+      <Card className="mt-8 overflow-visible" variant="default">
         <div className="overflow-x-auto">
-          <table className="w-full border-separate border-spacing-0">
+          <table className="w-full">
             <thead>
-              <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                <th className="px-5 py-3">Title</th>
-                <th className="px-5 py-3">Category</th>
-                <th className="px-5 py-3">Type</th>
-                <th className="px-5 py-3">Date</th>
-                <th className="px-5 py-3 text-right">Amount</th>
-                <th className="px-5 py-3 text-right">Actions</th>
+              <tr className="border-b border-surface-100 text-left dark:border-surface-800">
+                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Description</th>
+                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Category</th>
+                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Type</th>
+                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Date</th>
+                <th className="px-8 py-5 text-right text-[11px] font-bold uppercase tracking-widest text-surface-400">Amount</th>
+                <th className="px-8 py-5 text-right text-[11px] font-bold uppercase tracking-widest text-surface-400">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-surface-50 dark:divide-surface-800/50">
               {filtered.length === 0 ? (
                 <tr>
-                  <td className="px-5 py-6 text-sm text-slate-600" colSpan={6}>
-                    No transactions match your filters.
+                  <td className="px-8 py-12 text-center text-sm font-medium text-surface-400" colSpan={6}>
+                    No records matching your search queries.
                   </td>
                 </tr>
               ) : (
                 filtered.map((t) => (
-                  <tr key={t.id} className="border-t border-slate-100 text-sm dark:border-white/10">
-                    <td className="px-5 py-3">
-                      <div className="font-semibold text-slate-900 dark:text-slate-100">{t.title}</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">{t.method}</div>
+                  <tr key={t.id} className="group transition-colors hover:bg-surface-50/50 dark:hover:bg-surface-800/10">
+                    <td className="px-8 py-5">
+                      <div className="font-bold text-surface-900 group-hover:text-brand-600 transition-colors dark:text-surface-100 dark:group-hover:text-brand-400">
+                        {t.title}
+                      </div>
+                      <div className="text-xs font-medium text-surface-400">{t.method}</div>
                     </td>
-                    <td className="px-5 py-3">
-                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                    <td className="px-8 py-5">
+                      <span className="inline-flex items-center rounded-lg bg-surface-100/80 px-2 py-1 text-[10px] font-bold text-surface-600 dark:bg-surface-800 dark:text-surface-400">
                         {t.category}
                       </span>
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="px-8 py-5">
                       <span
                         className={cx(
-                          'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1',
+                          'inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold tracking-tight ring-1 ring-inset',
                           t.type === 'income'
-                            ? 'bg-emerald-50 text-emerald-800 ring-emerald-100'
-                            : 'bg-rose-50 text-rose-800 ring-rose-100',
+                            ? 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20'
+                            : 'bg-surface-50 text-surface-600 ring-surface-200 dark:bg-surface-800 dark:text-surface-400 dark:ring-surface-700',
                         )}
                       >
-                        {t.type}
+                        {t.type.toUpperCase()}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-slate-600 dark:text-slate-400">{t.date}</td>
+                    <td className="px-8 py-5 text-sm font-medium text-surface-500 dark:text-surface-400">{t.date}</td>
                     <td
                       className={cx(
-                        'px-5 py-3 text-right font-semibold tabular-nums',
-                        t.type === 'income' ? 'text-emerald-700' : 'text-rose-700',
+                        'px-8 py-5 text-right font-display text-base font-bold tabular-nums',
+                        t.type === 'income' ? 'text-emerald-600' : 'text-surface-900 dark:text-white',
                       )}
                     >
                       {t.type === 'expense' ? '-' : '+'}
                       {formatCurrency(t.amount, settings.currency)}
                     </td>
-                    <td className="px-5 py-3 text-right">
-                      <div className="flex justify-end gap-2">
+                    <td className="px-8 py-5 text-right">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           as={Link}
                           to={`/edit/${t.id}`}
                           variant="secondary"
                           size="sm"
+                          className="rounded-lg px-3 py-1.5"
                         >
                           Edit
                         </Button>
                         <Button 
-                          variant="danger"
+                          variant="ghost"
                           size="sm"
+                          className="rounded-lg px-3 py-1.5 text-red-500 hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-950/20"
                           onClick={() => {
-                            const ok = window.confirm('Delete this transaction?')
-                            if (ok) deleteTransaction(t.id)
+                            if (window.confirm('Are you sure you want to delete this transaction?')) deleteTransaction(t.id)
                           }}
                         >
                           Delete
