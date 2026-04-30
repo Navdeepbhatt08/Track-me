@@ -15,29 +15,22 @@ export default function SignupPage() {
   const [error, setError] = useState('')
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12">
+    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
       <div className="w-full max-w-md">
-        <div className="mb-10 text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-600/10 text-brand-600 dark:bg-brand-400/10 dark:text-brand-400 mb-6 ring-1 ring-brand-600/20 shadow-xl shadow-brand-600/20">
-             <span className="font-display text-2xl font-extrabold tracking-tighter">TM</span>
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
-            Join TrackMe
-          </h1>
-          <p className="mt-4 text-base font-medium text-surface-500 dark:text-surface-400">
-            Start your journey towards professional financial management.
-          </p>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Sign Up</h1>
+          <p className="text-gray-600 mt-1">Create your account</p>
         </div>
 
-        <Card className="p-8 sm:p-10 border-white/20 dark:border-white/5" variant="default">
+        <Card className="p-6">
           {error && (
-            <div className="mb-6 rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-800 ring-1 ring-red-100 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/20">
+            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded text-sm">
               {error}
             </div>
           )}
 
           <form
-            className="space-y-6"
+            className="space-y-4"
             onSubmit={async (e) => {
               e.preventDefault()
               setError('')
@@ -53,51 +46,45 @@ export default function SignupPage() {
             }}
           >
             <Input
-              label="Full Name"
+              label="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
               required
-              placeholder="e.g. John Doe"
+              placeholder="Your name"
             />
 
             <Input
-              label="Email Address"
+              label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
               placeholder="you@example.com"
             />
-            
+
             <Input
-              label="Access Password"
+              label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               required
               minLength={6}
-              placeholder="At least 6 characters"
+              placeholder="Min 6 characters"
             />
 
-            <Button type="submit" variant="primary" className="w-full py-4 text-base" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Get Started'}
+            <Button type="submit" variant="primary" className="w-full" disabled={loading}>
+              {loading ? 'Creating...' : 'Sign Up'}
             </Button>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-sm font-medium text-surface-500 dark:text-surface-400">
-              Already a member?{' '}
-              <Link className="font-bold text-brand-600 dark:text-brand-400 hover:underline" to="/login">
-                Sign in instead
-              </Link>
-            </p>
-          </div>
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link className="text-blue-600 hover:text-blue-700 font-medium" to="/login">
+              Sign in
+            </Link>
+          </p>
         </Card>
-        
-        <p className="mt-8 text-center text-xs text-surface-400">
-          By signing up, you agree to our <Link to="#" className="underline">Terms of Service</Link> and <Link to="#" className="underline">Privacy Policy</Link>.
-        </p>
       </div>
     </div>
   )

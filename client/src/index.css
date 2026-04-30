@@ -1,45 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --brand-primary: #2563eb;
-    --brand-secondary: #4f46e5;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   body {
-    @apply bg-surface-50 font-sans text-surface-900;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-display font-bold tracking-tight;
-  }
-
-  a {
-    @apply text-brand-600 transition-colors hover:text-brand-700;
-  }
-}
-
-@layer components {
-  .glass {
-    @apply bg-white border border-surface-200 shadow-sm;
-  }
-
-  .glass-card {
-    @apply bg-white border border-surface-200 shadow-sm;
+    @apply bg-gray-50 text-gray-900;
   }
 }

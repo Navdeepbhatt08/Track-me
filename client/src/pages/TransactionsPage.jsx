@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
-import Input from '../components/ui/Input'
 import { cx, formatCurrency } from '../lib/utils'
 import { useExpense } from '../state/ExpenseContext'
 
@@ -33,143 +32,107 @@ export default function TransactionsPage() {
   }, [transactions, query, type, category])
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-           <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
-            Transaction History
-          </h1>
-          <p className="text-base font-medium text-surface-500 dark:text-surface-400">
-            Manage your spending with advanced search and filters.
-          </p>
+    <div className="max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+          <p className="text-gray-600">Manage your records</p>
         </div>
-        <Button as={Link} to="/add" variant="primary" className="px-8 shadow-xl shadow-brand-600/20">
+        <Button as={Link} to="/add" variant="primary">
           Add New
         </Button>
       </div>
 
-      <Card className="mt-10 p-6 border-white/10" variant="glass">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <Input
-              label="Search Records"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Filter by title, category, or payment method..."
-              className="py-2.5"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-              Transaction Type
-            </label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
-            >
-              <option value="all">All Types</option>
-              <option value="expense">Expenses Only</option>
-              <option value="income">Income Only</option>
-            </select>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
-            >
-              <option value="all">All Categories</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-          </div>
+      <Card className="p-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search..."
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          />
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          >
+            <option value="all">All Types</option>
+            <option value="expense">Expenses</option>
+            <option value="income">Income</option>
+          </select>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          >
+            <option value="all">All Categories</option>
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
         </div>
       </Card>
 
-      <Card className="mt-8 overflow-visible" variant="default">
+      <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-surface-100 text-left dark:border-surface-800">
-                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Description</th>
-                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Category</th>
-                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Type</th>
-                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-surface-400">Date</th>
-                <th className="px-8 py-5 text-right text-[11px] font-bold uppercase tracking-widest text-surface-400">Amount</th>
-                <th className="px-8 py-5 text-right text-[11px] font-bold uppercase tracking-widest text-surface-400">Actions</th>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Title</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Category</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Type</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Date</th>
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Amount</th>
+                <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-50 dark:divide-surface-800/50">
+            <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td className="px-8 py-12 text-center text-sm font-medium text-surface-400" colSpan={6}>
-                    No records matching your search queries.
+                  <td className="px-4 py-8 text-center text-gray-500" colSpan={6}>
+                    No transactions found
                   </td>
                 </tr>
               ) : (
                 filtered.map((t) => (
-                  <tr key={t.id} className="group transition-colors hover:bg-surface-50/50 dark:hover:bg-surface-800/10">
-                    <td className="px-8 py-5">
-                      <div className="font-bold text-surface-900 group-hover:text-brand-600 transition-colors dark:text-surface-100 dark:group-hover:text-brand-400">
-                        {t.title}
-                      </div>
-                      <div className="text-xs font-medium text-surface-400">{t.method}</div>
+                  <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <p className="font-medium">{t.title}</p>
+                      <p className="text-xs text-gray-500">{t.method}</p>
                     </td>
-                    <td className="px-8 py-5">
-                      <span className="inline-flex items-center rounded-lg bg-surface-100/80 px-2 py-1 text-[10px] font-bold text-surface-600 dark:bg-surface-800 dark:text-surface-400">
-                        {t.category}
+                    <td className="px-4 py-3 text-sm">{t.category}</td>
+                    <td className="px-4 py-3">
+                      <span className={cx(
+                        'px-2 py-1 text-xs font-medium rounded',
+                        t.type === 'income' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                      )}>
+                        {t.type}
                       </span>
                     </td>
-                    <td className="px-8 py-5">
-                      <span
-                        className={cx(
-                          'inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold tracking-tight ring-1 ring-inset',
-                          t.type === 'income'
-                            ? 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20'
-                            : 'bg-surface-50 text-surface-600 ring-surface-200 dark:bg-surface-800 dark:text-surface-400 dark:ring-surface-700',
-                        )}
-                      >
-                        {t.type.toUpperCase()}
-                      </span>
+                    <td className="px-4 py-3 text-sm text-gray-600">{t.date}</td>
+                    <td className={cx(
+                      'px-4 py-3 text-right font-medium',
+                      t.type === 'income' ? 'text-green-600' : 'text-gray-900'
+                    )}>
+                      {t.type === 'expense' ? '-' : '+'}{formatCurrency(t.amount, settings.currency)}
                     </td>
-                    <td className="px-8 py-5 text-sm font-medium text-surface-500 dark:text-surface-400">{t.date}</td>
-                    <td
-                      className={cx(
-                        'px-8 py-5 text-right font-display text-base font-bold tabular-nums',
-                        t.type === 'income' ? 'text-emerald-600' : 'text-surface-900 dark:text-white',
-                      )}
-                    >
-                      {t.type === 'expense' ? '-' : '+'}
-                      {formatCurrency(t.amount, settings.currency)}
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          as={Link}
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <Link
                           to={`/edit/${t.id}`}
-                          variant="secondary"
-                          size="sm"
-                          className="rounded-lg px-3 py-1.5"
+                          className="text-sm text-blue-600 hover:text-blue-700"
                         >
                           Edit
-                        </Button>
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          className="rounded-lg px-3 py-1.5 text-red-500 hover:bg-red-50 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-950/20"
+                        </Link>
+                        <button
+                          className="text-sm text-red-600 hover:text-red-700"
                           onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this transaction?')) deleteTransaction(t.id)
+                            if (window.confirm('Delete this transaction?')) deleteTransaction(t.id)
                           }}
                         >
                           Delete
-                        </Button>
+                        </button>
                       </div>
                     </td>
                   </tr>

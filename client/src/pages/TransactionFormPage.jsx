@@ -39,34 +39,32 @@ export default function TransactionFormPage({ mode = 'add' }) {
   const isEdit = mode === 'edit'
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
-            {isEdit ? 'Update Record' : 'New Transaction'}
+    <div className="max-w-2xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {isEdit ? 'Edit Transaction' : 'New Transaction'}
           </h1>
-          <p className="text-base font-medium text-surface-500 dark:text-surface-400">
-            {isEdit ? 'Modify the details of your existing record.' : 'Capture your spending or income details precisely.'}
+          <p className="text-gray-600">
+            {isEdit ? 'Update transaction details' : 'Add a new transaction'}
           </p>
         </div>
-        <Button as={Link} to="/transactions" variant="secondary" className="px-6">
-          Back to List
-        </Button>
+        <Link to="/transactions" className="text-blue-600 hover:text-blue-700">
+          Back
+        </Link>
       </div>
 
       {isEdit && !existing ? (
-        <Card className="mt-10 p-12 text-center" variant="default">
-          <div className="text-lg font-bold text-surface-500 mb-6">
-            Transaction record not found.
-          </div>
-          <Button as={Link} to="/transactions" variant="primary">
-            Return to Activity
-          </Button>
+        <Card className="p-8 text-center">
+          <p className="text-gray-500 mb-4">Transaction not found</p>
+          <Link to="/transactions" className="text-blue-600 hover:text-blue-700">
+            Go back
+          </Link>
         </Card>
       ) : (
-        <Card className="mt-10 p-8 sm:p-10" variant="default">
+        <Card className="p-6">
           <form
-            className="space-y-8"
+            className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault()
               if (isEdit) {
@@ -85,26 +83,21 @@ export default function TransactionFormPage({ mode = 'add' }) {
               navigate('/transactions')
             }}
           >
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <Input
-                  label="Transaction Title"
-                  value={form.title}
-                  onChange={(e) => patch({ title: e.target.value })}
-                  placeholder="e.g. Monthly Grocery, Freelance Payment"
-                  required
-                  className="py-3"
-                />
-              </div>
+            <Input
+              label="Title"
+              value={form.title}
+              onChange={(e) => patch({ title: e.target.value })}
+              placeholder="e.g. Grocery shopping"
+              required
+            />
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                  Transaction Category
-                </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select
                   value={form.category}
                   onChange={(e) => patch({ category: e.target.value })}
-                  className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
                 >
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -112,34 +105,34 @@ export default function TransactionFormPage({ mode = 'add' }) {
                 </select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                  Type of Entry
-                </label>
-                <div className="flex p-1 bg-surface-50 dark:bg-surface-900 rounded-2xl border border-surface-100 dark:border-surface-800">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <div className="flex rounded-md border border-gray-300 overflow-hidden">
                   <button
                     type="button"
                     onClick={() => patch({ type: 'expense' })}
                     className={cx(
-                      "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
-                      form.type === 'expense' ? "bg-white text-surface-900 shadow-sm dark:bg-surface-800 dark:text-white" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
+                      "flex-1 py-2 text-sm font-medium",
+                      form.type === 'expense' ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-50"
                     )}
                   >
-                    EXPENSE
+                    Expense
                   </button>
                   <button
                     type="button"
                     onClick={() => patch({ type: 'income' })}
                     className={cx(
-                      "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
-                      form.type === 'income' ? "bg-brand-600 text-white shadow-brand-600/20" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
+                      "flex-1 py-2 text-sm font-medium",
+                      form.type === 'income' ? "bg-blue-600 text-white" : "bg-white text-gray-700 hover:bg-gray-50"
                     )}
                   >
-                    INCOME
+                    Income
                   </button>
                 </div>
               </div>
+            </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label={`Amount (${state.settings.currency})`}
                 value={form.amount}
@@ -149,56 +142,52 @@ export default function TransactionFormPage({ mode = 'add' }) {
                 step="0.01"
                 placeholder="0.00"
                 required
-                className="py-3 font-display font-bold"
               />
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                  Payment Method
-                </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Method</label>
                 <select
                   value={form.method}
                   onChange={(e) => patch({ method: e.target.value })}
-                  className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
                 >
                   {METHODS.map((m) => (
                     <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
               </div>
-
-              <div className="space-y-1.5 sm:col-span-2">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                  Entry Date
-                </label>
-                <input
-                  value={form.date}
-                  onChange={(e) => patch({ date: e.target.value })}
-                  type="date"
-                  className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
-                />
-              </div>
-
-              <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                  Additional Notes
-                </label>
-                <textarea
-                  value={form.notes}
-                  onChange={(e) => patch({ notes: e.target.value })}
-                  rows={4}
-                  placeholder="Describe the transaction for future reference..."
-                  className="block w-full resize-none rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all placeholder:text-surface-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:placeholder:text-surface-600 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
-                />
-              </div>
             </div>
 
-            <div className="pt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end border-t border-surface-50 dark:border-surface-800/50">
-              <Button as={Link} to="/transactions" variant="ghost" className="px-8">
-                Discard
-              </Button>
-              <Button type="submit" variant="primary" className="px-12 py-3 shadow-lg shadow-brand-600/20">
-                {isEdit ? 'Update Details' : 'Save Transaction'}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input
+                type="date"
+                value={form.date}
+                onChange={(e) => patch({ date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+              <textarea
+                value={form.notes}
+                onChange={(e) => patch({ notes: e.target.value })}
+                rows={3}
+                placeholder="Optional notes..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500 resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-gray-100">
+              <Link
+                to="/transactions"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </Link>
+              <Button type="submit" variant="primary">
+                {isEdit ? 'Update' : 'Save'}
               </Button>
             </div>
           </form>

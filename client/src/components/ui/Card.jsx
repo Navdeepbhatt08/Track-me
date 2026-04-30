@@ -1,21 +1,9 @@
 import React from 'react'
 import { cx } from '../../lib/utils'
 
-export default function Card({ children, className, variant = 'default' }) {
-  const variants = {
-    default: 'bg-white border-surface-200 shadow-sm',
-    glass: 'bg-white border-surface-200 shadow-sm',
-    outline: 'bg-transparent border-surface-200',
-  }
-
+export default function Card({ children, className }) {
   return (
-    <div
-      className={cx(
-        'overflow-hidden rounded-3xl border transition-all duration-300',
-        variants[variant],
-        className,
-      )}
-    >
+    <div className={cx('bg-white border border-gray-200 rounded-lg shadow-sm', className)}>
       {children}
     </div>
   )
