@@ -10,15 +10,15 @@ export default function Button({
 }) {
   const variants = {
     primary:
-      'bg-brand-600 text-white shadow-brand-600/20 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/30 active:scale-95',
+      'bg-brand-600 text-white hover:bg-brand-700',
     secondary:
-      'bg-white text-surface-900 border border-surface-200 hover:bg-surface-50 hover:border-surface-300 dark:bg-surface-900 dark:text-surface-100 dark:border-surface-800 dark:hover:bg-surface-800/80 active:scale-95',
+      'bg-white text-surface-900 border border-surface-200 hover:bg-surface-100',
     outline:
-      'bg-transparent text-brand-600 border-2 border-brand-600/20 hover:border-brand-600/50 hover:bg-brand-50 dark:text-brand-400 dark:border-brand-400/20 dark:hover:bg-brand-400/10 active:scale-95',
+      'bg-transparent text-brand-600 border-2 border-brand-600/20 hover:border-brand-600 hover:bg-brand-50',
     danger:
-      'bg-red-500 text-white shadow-red-500/20 hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/30 active:scale-95',
+      'bg-red-500 text-white hover:bg-red-600',
     ghost:
-      'bg-transparent text-surface-600 hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800 focus:ring-0',
+      'bg-transparent text-surface-600 hover:bg-surface-100 focus:ring-0',
   }
 
   const sizes = {

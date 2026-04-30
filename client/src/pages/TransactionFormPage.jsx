@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
-import { formatDateInputValue } from '../lib/utils'
+import { cx, formatDateInputValue } from '../lib/utils'
 import { useExpense } from '../state/ExpenseContext'
 
 const CATEGORIES = ['Food', 'Travel', 'Bills', 'Shopping', 'Health', 'Salary', 'Other']
@@ -117,26 +117,26 @@ export default function TransactionFormPage({ mode = 'add' }) {
                   Type of Entry
                 </label>
                 <div className="flex p-1 bg-surface-50 dark:bg-surface-900 rounded-2xl border border-surface-100 dark:border-surface-800">
-                   <button
-                     type="button"
-                     onClick={() => patch({ type: 'expense' })}
-                     className={cx(
-                       "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
-                       form.type === 'expense' ? "bg-white text-surface-900 shadow-sm dark:bg-surface-800 dark:text-white" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
-                     )}
-                   >
-                     EXPENSE
-                   </button>
-                   <button
-                     type="button"
-                     onClick={() => patch({ type: 'income' })}
-                     className={cx(
-                       "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
-                       form.type === 'income' ? "bg-brand-600 text-white shadow-brand-600/20" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
-                     )}
-                   >
-                     INCOME
-                   </button>
+                  <button
+                    type="button"
+                    onClick={() => patch({ type: 'expense' })}
+                    className={cx(
+                      "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
+                      form.type === 'expense' ? "bg-white text-surface-900 shadow-sm dark:bg-surface-800 dark:text-white" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
+                    )}
+                  >
+                    EXPENSE
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => patch({ type: 'income' })}
+                    className={cx(
+                      "flex-1 py-2 text-xs font-bold rounded-xl transition-all",
+                      form.type === 'income' ? "bg-brand-600 text-white shadow-brand-600/20" : "text-surface-400 hover:text-surface-600 dark:hover:text-surface-300"
+                    )}
+                  >
+                    INCOME
+                  </button>
                 </div>
               </div>
 

@@ -1,44 +1,10 @@
 import React, { useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { cx } from '../lib/utils'
-import { useTheme } from '../state/ThemeContext.jsx'
 import { useAuth } from '../state/AuthContext.jsx'
-
-function SunIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-    </svg>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  )
-}
-
-function ThemeSwitch({ theme, toggleTheme }) {
-  const isDark = theme === 'dark'
-  return (
-    <button
-      onClick={toggleTheme}
-      className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-surface-200 bg-white shadow-sm transition-all hover:bg-surface-50 dark:border-surface-800 dark:bg-surface-900 dark:hover:bg-surface-800"
-      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-    >
-      <div className="text-surface-600 dark:text-surface-400">
-        {isDark ? <MoonIcon /> : <SunIcon />}
-      </div>
-    </button>
-  )
-}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const { theme, toggleTheme } = useTheme()
   const { isAuthed, logout } = useAuth()
   const navigate = useNavigate()
 
@@ -58,29 +24,24 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 px-4 py-4 sm:px-6">
-      <div className="mx-auto max-w-6xl">
-        <div className="glass flex h-16 items-center justify-between rounded-[2rem] px-6 shadow-premium ring-1 ring-white/10">
-          <Link
-            to="/"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-3 transition-transform active:scale-95"
-          >
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-              <span className="font-display text-lg font-extrabold tracking-tighter">TM</span>
-            </div>
-            <div className="hidden flex-col leading-tight sm:flex">
-              <span className="font-display text-sm font-bold tracking-tight text-surface-900 dark:text-surface-50">
-                TrackMe
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">
-                Premium
-              </span>
-            </div>
-          </Link>
+    <header className="sticky top-0 z-50 border-b border-surface-200 bg-white shadow-sm">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <Link
+          to="/"
+          onClick={() => setOpen(false)}
+          className="flex min-w-0 items-center gap-3 text-surface-900"
+        >
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-600 text-sm font-bold text-white">
+            TM
+          </div>
+          <div className="hidden flex-col leading-tight sm:flex">
+            <span className="text-sm font-semibold">TrackMe</span>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-surface-500">Premium</span>
+          </div>
+        </Link>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+        <div className="flex items-center gap-2">
+          <nav className="hidden items-center gap-2 md:flex" aria-label="Main">
             {items.map((it) => (
               <NavLink
                 key={it.to}
@@ -88,10 +49,8 @@ export default function Navbar() {
                 end={it.to === '/'}
                 className={({ isActive }) =>
                   cx(
-                    'rounded-xl px-4 py-2 text-sm font-semibold tracking-tight transition-all duration-200',
-                    isActive
-                      ? 'bg-brand-600/10 text-brand-600 dark:bg-brand-400/10 dark:text-brand-400'
-                      : 'text-surface-600 hover:bg-surface-50 hover:text-surface-900 dark:text-surface-400 dark:hover:bg-surface-800/60 dark:hover:text-surface-200',
+                    'rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-150',
+                    isActive ? 'bg-brand-100 text-brand-700' : 'text-surface-700 hover:bg-surface-100 hover:text-surface-900',
                   )
                 }
               >
@@ -100,47 +59,39 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
-            
-            <div className="h-6 w-px bg-surface-200 dark:bg-surface-800 mx-1 hidden md:block" />
-
-            {isAuthed ? (
-              <button
-                type="button"
-                className="hidden rounded-2xl bg-surface-900 px-5 py-2.5 text-sm font-bold tracking-tight text-white transition-all hover:bg-surface-800 active:scale-95 md:inline-flex dark:bg-surface-100 dark:text-surface-950 dark:hover:bg-white"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                to="/login"
-                className="hidden rounded-2xl bg-brand-600 px-5 py-2.5 text-sm font-bold tracking-tight text-white transition-all hover:bg-brand-700 active:scale-95 md:inline-flex"
-              >
-                Sign In
-              </Link>
-            )}
-
+          {isAuthed ? (
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-surface-200 bg-white transition-all hover:bg-surface-50 md:hidden dark:border-surface-800 dark:bg-surface-900 dark:hover:bg-surface-800"
-              onClick={() => setOpen((v) => !v)}
+              className="hidden rounded-lg bg-surface-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-surface-800 md:inline-flex"
+              onClick={handleLogout}
             >
-              <div className="flex flex-col gap-1.5">
-                <span className={cx('h-0.5 w-5 bg-surface-600 transition-all dark:bg-surface-400', open && 'translate-y-2 rotate-45')} />
-                {!open && <span className="h-0.5 w-5 bg-surface-600 dark:bg-surface-400" />}
-                <span className={cx('h-0.5 w-5 bg-surface-600 transition-all dark:bg-surface-400', open && '-translate-y-0.5 -rotate-45')} />
-              </div>
+              Logout
             </button>
-          </div>
-        </div>
-      </div>
+          ) : (
+            <Link
+              to="/login"
+              className="hidden rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700 md:inline-flex"
+            >
+              Sign In
+            </Link>
+          )}
 
-      {/* Mobile Menu */}
-      <div className={cx('overflow-hidden transition-all duration-300 md:hidden', open ? 'mt-4 max-h-[400px] opacity-100' : 'max-h-0 opacity-0')}>
-        <div className="glass rounded-[2rem] p-4 shadow-xl ring-1 ring-white/10">
-          <div className="flex flex-col gap-1">
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-white transition hover:bg-surface-100 md:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle navigation"
+          >
+            <div className="flex flex-col gap-1.5">
+              <span className={cx('h-0.5 w-5 bg-surface-700 transition-transform', open && 'translate-y-2 rotate-45')} />
+              {!open && <span className="h-0.5 w-5 bg-surface-700" />}
+              <span className={cx('h-0.5 w-5 bg-surface-700 transition-transform', open && '-translate-y-0.5 -rotate-45')} />
+            </div>
+          </button>
+        </div>
+
+        <div className={cx('w-full overflow-hidden md:hidden', open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0')}>
+          <div className="space-y-2 border-t border-surface-200 bg-white px-4 py-4">
             {items.map((it) => (
               <NavLink
                 key={it.to}
@@ -149,23 +100,30 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
                   cx(
-                    'flex items-center justify-between rounded-2xl px-5 py-3 text-sm font-bold tracking-tight transition-all',
-                    isActive
-                      ? 'bg-brand-600 text-white'
-                      : 'text-surface-700 hover:bg-surface-50 dark:text-surface-200 dark:hover:bg-surface-800/60',
+                    'block rounded-lg px-4 py-3 text-sm font-medium transition-colors',
+                    isActive ? 'bg-brand-100 text-brand-700' : 'text-surface-700 hover:bg-surface-100',
                   )
                 }
               >
                 {it.label}
               </NavLink>
             ))}
-            <div className="mt-2 h-px bg-surface-200 dark:bg-surface-800" />
-            <button
-              onClick={() => { handleLogout(); setOpen(false) }}
-              className="mt-2 flex items-center justify-between rounded-2xl px-5 py-3 text-sm font-bold tracking-tight text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20"
-            >
-              Logout
-            </button>
+            {isAuthed ? (
+              <button
+                onClick={() => { handleLogout(); setOpen(false) }}
+                className="w-full rounded-lg bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-100"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg bg-brand-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-brand-700"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>

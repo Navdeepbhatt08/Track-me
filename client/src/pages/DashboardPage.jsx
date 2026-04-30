@@ -259,23 +259,8 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          <Card className="p-8 bg-brand-600 text-white border-0 shadow-2xl shadow-brand-600/40 relative overflow-hidden group">
-             <div className="absolute -right-4 -top-4 font-display text-9xl font-black opacity-10 group-hover:scale-110 transition-transform">
-               $
-             </div>
-             <div className="relative z-10">
-               <h3 className="text-xl font-extrabold tracking-tight">Upgrade Plans</h3>
-               <p className="mt-2 text-sm font-medium text-brand-100">
-                 Get advanced analytics, multi-currency support and more.
-               </p>
-               <Button variant="secondary" className="mt-6 w-full bg-white text-brand-600 border-0 hover:bg-brand-50">
-                 View Premium
-               </Button>
-             </div>
-          </Card>
         </div>
       </div>
     </div>
   )
 }
-
