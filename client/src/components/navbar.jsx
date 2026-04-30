@@ -42,8 +42,10 @@ export default function Navbar() {
                 end={it.to === '/'}
                 className={({ isActive }) =>
                   cx(
-                    'px-3 py-2 text-sm font-medium rounded-md',
-                    isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+                    'px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   )
                 }
               >
@@ -53,14 +55,14 @@ export default function Navbar() {
             {isAuthed ? (
               <button
                 onClick={handleLogout}
-                className="ml-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-md"
+                className="ml-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-red-600 rounded-md transition-colors"
               >
                 Logout
               </button>
             ) : (
               <Link
                 to="/login"
-                className="ml-2 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="ml-2 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:shadow-md transition-all"
               >
                 Login
               </Link>

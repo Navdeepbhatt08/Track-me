@@ -18,11 +18,14 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Sign Up</h1>
-          <p className="text-gray-600 mt-1">Create your account</p>
+          <div className="w-16 h-16 bg-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-600/30">
+            <span className="text-white text-2xl font-bold">ET</span>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
+          <p className="text-gray-600 mt-1">Get started with Expense Tracker</p>
         </div>
 
-        <Card className="p-6">
+        <Card className="p-6 shadow-lg">
           {error && (
             <div className="mb-4 p-3 bg-red-50 text-red-700 rounded text-sm">
               {error}

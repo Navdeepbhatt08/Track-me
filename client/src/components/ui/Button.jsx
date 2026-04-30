@@ -25,7 +25,7 @@ export default function Button({
   return (
     <Comp
       className={cx(
-        'inline-flex items-center justify-center font-medium transition-colors focus:outline-none disabled:opacity-50',
+        'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm active:scale-95',
         variants[variant] ?? variants.primary,
         sizes[size] ?? sizes.md,
         className,

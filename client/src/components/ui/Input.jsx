@@ -11,8 +11,8 @@ export default function Input({ label, error, className, ...props }) {
       )}
       <input
         className={cx(
-          'block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none',
-          error && 'border-red-500 focus:border-red-500',
+          'block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none hover:border-gray-400',
+          error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
           className,
         )}
         {...props}

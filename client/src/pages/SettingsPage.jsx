@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
-import { useExpense } from '../state/ExpenseContext'  
+import { useExpense } from '../state/ExpenseContext'
 
 export default function SettingsPage() {
   const { state, updateSettings, clearTransactions } = useExpense()
@@ -11,19 +11,26 @@ export default function SettingsPage() {
   const [monthlyBudget, setMonthlyBudget] = useState(state.settings.monthlyBudget || 0)
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
-      <div className="space-y-1">
-        <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
-          Account Settings
-        </h1>
-        <p className="text-base font-medium text-surface-500 dark:text-surface-400">
-          Personalize your dashboard and financial targets.
-        </p>
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <p className="text-gray-600">Manage your account preferences</p>
       </div>
 
-      <Card className="mt-10 p-8 sm:p-10" variant="default">
+      <Card className="p-6 mb-6" hover>
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold">Profile</h2>
+            <p className="text-sm text-gray-500">Update your personal information</p>
+          </div>
+        </div>
         <form
-          className="space-y-8"
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault()
             updateSettings({
@@ -31,84 +38,77 @@ export default function SettingsPage() {
               currency,
               monthlyBudget: Number(monthlyBudget || 0),
             })
-            alert('Settings updated successfully!')
+            alert('Settings saved!')
           }}
         >
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <Input
-                label="Public Display Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                className="py-3"
-              />
-            </div>
+          <Input
+            label="Display Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+          />
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-                Preferred Currency
-              </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               >
-                <option value="INR">INR (₹) - Indian Rupee</option>
-                <option value="USD">USD ($) - US Dollar</option>
-                <option value="EUR">EUR (€) - Euro</option>
-                <option value="GBP">GBP (£) - British Pound</option>
+                <option value="INR">INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
               </select>
             </div>
 
             <Input
-              label="Monthly Budget Target"
+              label="Monthly Budget"
               value={monthlyBudget}
               onChange={(e) => setMonthlyBudget(e.target.value)}
               type="number"
               min="0"
-              step="1"
               placeholder="0.00"
-              className="py-3"
             />
           </div>
 
-          <div className="pt-4 flex items-center justify-between border-t border-surface-50 dark:border-surface-800/50">
-             <p className="text-xs font-medium text-surface-400 max-w-[240px]">
-               Changes take effect immediately across all dashboard views.
-             </p>
-             <Button type="submit" variant="primary" className="px-10 py-3 shadow-lg shadow-brand-600/20">
-               Save Changes
-             </Button>
+          <div className="pt-2">
+            <Button type="submit" variant="primary">
+              Save Changes
+            </Button>
           </div>
         </form>
       </Card>
 
-      <div className="mt-12 space-y-4">
-        <h3 className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-red-500 ml-1">Advanced Controls</h3>
-        <Card className="p-8 border-red-500/10 bg-red-500/[0.02]" variant="default">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold text-red-600 dark:text-red-400">Security & Data Clearing</h2>
-              <p className="text-sm font-medium text-surface-500">
-                Permanently delete all transaction history from local storage.
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="text-red-500 border-red-500/20 hover:bg-red-500 hover:text-white dark:hover:bg-red-500 hover:border-red-500 px-6 whitespace-nowrap"
-              onClick={() => {
-                if (window.confirm('CRITICAL: This will permanently delete ALL transactions. This action cannot be undone. Proceed?')) {
-                  clearTransactions()
-                  alert('All transaction data has been cleared.')
-                }
-              }}
-            >
-              Clear Data History
-            </Button>
+      <Card className="p-6 border-red-200 bg-red-50/30">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
           </div>
-        </Card>
-      </div>
+          <div>
+            <h2 className="text-lg font-semibold text-red-600">Danger Zone</h2>
+            <p className="text-sm text-gray-500">Irreversible actions</p>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          This will permanently delete all your transactions. This action cannot be undone.
+        </p>
+        <Button
+          variant="outline"
+          className="text-red-600 border-red-300 hover:bg-red-100 hover:border-red-400"
+          onClick={() => {
+            if (window.confirm('Delete ALL transactions? This cannot be undone.')) {
+              clearTransactions()
+              alert('All data cleared.')
+            }
+          }}
+        >
+          Clear All Data
+        </Button>
+      </Card>
     </div>
   )
 }

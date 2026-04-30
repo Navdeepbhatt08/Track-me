@@ -51,139 +51,168 @@ export default function ReportsPage() {
   }, [transactions, selectedMonth])
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold tracking-tight text-surface-950 dark:text-white sm:text-5xl">
-            Financial Analytics
-          </h1>
-          <p className="text-base font-medium text-surface-500 dark:text-surface-400">
-            Deeper insights into your spending habits and income streams.
-          </p>
+    <div className="max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
+          <p className="text-gray-600">View your financial summary</p>
         </div>
 
-        <div className="w-full sm:w-64 space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400 ml-1">
-            Report Period
-          </label>
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="block w-full rounded-2xl border border-surface-200 bg-white px-4 py-3 text-sm text-surface-900 transition-all focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 dark:border-surface-800 dark:bg-surface-900 dark:text-surface-100 dark:focus:border-brand-400 dark:focus:ring-brand-400/10"
-          >
-            <option value="">All time history</option>
-            {months.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+        >
+          <option value="">All time</option>
+          {months.map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="p-8" variant="glass">
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-surface-500">Period Income</div>
-          <div className="mt-4 font-display text-3xl font-black tracking-tight text-emerald-600 dark:text-emerald-400">
-            {formatCurrency(data.income, settings.currency)}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <Card className="p-5 cursor-default" hover>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Income</p>
+              <p className="text-2xl font-bold text-green-600">
+                {formatCurrency(data.income, settings.currency)}
+              </p>
+            </div>
           </div>
-          <div className="mt-2 text-xs font-bold text-surface-400">Total inward cashflow</div>
-        </Card>
-        
-        <Card className="p-8" variant="glass">
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-surface-500">Period Expenses</div>
-          <div className="mt-4 font-display text-3xl font-black tracking-tight text-surface-950 dark:text-white">
-            {formatCurrency(data.expense, settings.currency)}
-          </div>
-          <div className="mt-2 text-xs font-bold text-surface-400">Total outward spending</div>
         </Card>
 
-        <Card className="p-8" variant="glass">
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-surface-500">Net Balance</div>
-          <div className={cx(
-            "mt-4 font-display text-3xl font-black tracking-tight",
-            (data.income - data.expense) >= 0 ? "text-brand-600 dark:text-brand-400" : "text-red-600 dark:text-red-400"
-          )}>
-            {formatCurrency(data.income - data.expense, settings.currency)}
+        <Card className="p-5 cursor-default" hover>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Expenses</p>
+              <p className="text-2xl font-bold text-red-600">
+                {formatCurrency(data.expense, settings.currency)}
+              </p>
+            </div>
           </div>
-          <div className="mt-2 text-xs font-bold text-surface-400">Current period savings</div>
+        </Card>
+
+        <Card className="p-5 cursor-default" hover>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Balance</p>
+              <p className={cx(
+                "text-2xl font-bold",
+                (data.income - data.expense) >= 0 ? "text-blue-600" : "text-red-600"
+              )}>
+                {formatCurrency(data.income - data.expense, settings.currency)}
+              </p>
+            </div>
+          </div>
         </Card>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <Card className="p-8" variant="default">
-          <h2 className="text-xl font-extrabold tracking-tight text-surface-950 dark:text-white">
-            Category Breakdown
-          </h2>
-          <p className="mt-1 text-sm font-medium text-surface-500">
-            Based on outward expense activity only.
-          </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-5">
+          <h2 className="text-lg font-semibold mb-4">Spending by Category</h2>
 
-          <div className="mt-10 space-y-8">
-            {data.rows.length === 0 ? (
-              <div className="py-12 text-center text-sm font-medium text-surface-400">No expense data for this period.</div>
-            ) : (
-              data.rows.map((r) => (
+          {data.rows.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No expense data</p>
+          ) : (
+            <div className="space-y-4">
+              {data.rows.map((r, i) => (
                 <div key={r.cat} className="group">
-                  <div className="flex items-center justify-between text-sm mb-3">
-                    <div className="font-bold text-surface-900 dark:text-surface-100">{r.cat}</div>
-                    <div className="font-display font-black text-surface-950 dark:text-white">
-                      {formatCurrency(r.amt, settings.currency)} <span className="text-xs font-bold text-surface-400 ml-1">({r.pct}%)</span>
+                  <div className="flex justify-between text-sm mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={cx(
+                        'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold',
+                        i === 0 ? 'bg-yellow-100 text-yellow-700' :
+                          i === 1 ? 'bg-gray-200 text-gray-700' :
+                            i === 2 ? 'bg-orange-100 text-orange-700' :
+                              'bg-gray-100 text-gray-600'
+                      )}>
+                        {i + 1}
+                      </span>
+                      <span className="font-medium">{r.cat}</span>
                     </div>
+                    <span className="text-gray-600">
+                      {formatCurrency(r.amt, settings.currency)} <span className="text-gray-400">({r.pct}%)</span>
+                    </span>
                   </div>
-                  <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-surface-100 dark:bg-surface-800">
+                  <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={cx(
-                        'h-full rounded-full transition-all duration-1000 group-hover:brightness-110',
-                        r.pct >= 60 ? 'bg-red-500' : r.pct >= 25 ? 'bg-brand-600' : 'bg-emerald-500',
+                        'h-full rounded-full transition-all duration-700 ease-out',
+                        r.pct >= 50 ? 'bg-gradient-to-r from-red-500 to-red-400' :
+                          r.pct >= 25 ? 'bg-gradient-to-r from-blue-600 to-blue-400' :
+                            'bg-gradient-to-r from-green-500 to-green-400'
                       )}
-                      style={{ width: `${Math.max(2, r.pct)}%` }}
+                      style={{ width: `${Math.max(3, r.pct)}%` }}
                     />
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
 
-        <Card className="p-8" variant="default">
-          <h2 className="text-xl font-extrabold tracking-tight text-surface-950 dark:text-white">Summary Analytics</h2>
-          <p className="mt-1 text-sm font-medium text-surface-500">
-            Overview of your current budget performance.
-          </p>
+        <Card className="p-5">
+          <h2 className="text-lg font-semibold mb-4">Summary</h2>
 
-          <div className="mt-10 space-y-6">
-            <div className="flex items-center justify-between py-4 border-b border-surface-50 dark:border-surface-800/50">
-              <div className="text-sm font-bold text-surface-500 uppercase tracking-widest">Total Transactions</div>
-              <div className="font-display text-lg font-black text-surface-950 dark:text-white">{data.items.length}</div>
-            </div>
-            
-            <div className="flex items-center justify-between py-4 border-b border-surface-50 dark:border-surface-800/50">
-              <div className="text-sm font-bold text-surface-500 uppercase tracking-widest">Defined Budget</div>
-              <div className="font-display text-lg font-black text-surface-950 dark:text-white">
-                {formatCurrency(settings.monthlyBudget, settings.currency)}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span className="text-gray-600">Transactions</span>
               </div>
+              <span className="font-semibold text-gray-900">{data.items.length}</span>
             </div>
-
-            <div className="flex items-center justify-between py-4">
-              <div className="text-sm font-bold text-surface-500 uppercase tracking-widest">Budget Remaining</div>
-              <div className={cx(
-                "font-display text-2xl font-black",
-                (Number(settings.monthlyBudget || 0) - data.expense) >= 0 ? "text-emerald-600" : "text-red-600"
+            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-gray-600">Monthly Budget</span>
+              </div>
+              <span className="font-semibold text-gray-900">{formatCurrency(settings.monthlyBudget, settings.currency)}</span>
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <span className="text-gray-600">Remaining</span>
+              </div>
+              <span className={cx(
+                "font-bold text-lg",
+                (Number(settings.monthlyBudget || 0) - data.expense) >= 0 ? "text-green-600" : "text-red-600"
               )}>
-                {formatCurrency(
-                  Number(settings.monthlyBudget || 0) - data.expense,
-                  settings.currency,
-                )}
-              </div>
+                {formatCurrency(Number(settings.monthlyBudget || 0) - data.expense, settings.currency)}
+              </span>
             </div>
-            
-            <div className="mt-6 rounded-[2rem] bg-surface-50 dark:bg-surface-900/50 p-6 border border-surface-100 dark:border-surface-800">
-               <h4 className="text-xs font-bold uppercase tracking-widest text-surface-400 mb-2">Pro Insight</h4>
-               <p className="text-sm font-medium text-surface-600 dark:text-surface-300">
-                  {data.expense > data.income 
-                    ? "Warning: Your spending exceeds your income for this period. Consider reviewing your top categories."
-                    : "Excellent! You are maintaining a healthy savings rate this period."}
-               </p>
-            </div>
+          </div>
+
+          <div className={cx(
+            "mt-4 p-4 rounded-lg text-sm font-medium flex items-center gap-2",
+            data.expense > data.income ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+          )}>
+            <span className="text-lg">{data.expense > data.income ? "⚠️" : "✓"}</span>
+            {data.expense > data.income
+              ? "Spending exceeds income this period"
+              : "You're saving money this period"}
           </div>
         </Card>
       </div>
