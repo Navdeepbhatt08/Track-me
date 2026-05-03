@@ -18,16 +18,16 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-600/30">
+          <div className="w-16 h-16 bg-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-500/30">
             <span className="text-white text-2xl font-bold">ET</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-gray-600 mt-1">Get started with Expense Tracker</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h1>
+          <p className="text-gray-600">Sign up to get started with Expense Tracker</p>
         </div>
 
-        <Card className="p-6 shadow-lg">
+        <Card className="p-6 shadow-xl">
           {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded text-sm">
+            <div className="mb-4 p-3 bg-red-500/20 text-red-400 rounded text-sm">
               {error}
             </div>
           )}
@@ -81,12 +81,13 @@ export default function SignupPage() {
             </Button>
           </form>
 
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link className="text-blue-600 hover:text-blue-700 font-medium" to="/login">
-              Sign in
-            </Link>
-          </p>
+          <div className="w-full h-px bg-gray-300 my-6"></div>
+          <Link
+            to="/login"
+            className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Already have an account? Sign in
+          </Link>
         </Card>
       </div>
     </div>

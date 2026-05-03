@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-white text-gray-900 antialiased;
   }
 
   * {
@@ -14,7 +14,7 @@
 
 @layer components {
   .card-hover {
-    @apply hover:shadow-md hover:-translate-y-0.5 transition-all duration-200;
+    @apply hover:shadow-2xl hover:-translate-y-1 transition-all duration-300;
   }
 
   .btn-press {
@@ -22,6 +22,22 @@
   }
 
   .input-focus {
-    @apply focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500;
+    @apply focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400;
+  }
+
+  .pro-section {
+    @apply rounded-2xl p-8 mb-6;
+  }
+
+  .pro-card {
+    @apply rounded-xl shadow-lg border border-gray-200;
+  }
+
+  .pro-input {
+    @apply rounded-lg border-gray-300 bg-white;
+  }
+
+  .pro-button {
+    @apply rounded-lg font-medium;
   }
 }

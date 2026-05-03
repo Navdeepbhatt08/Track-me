@@ -9,17 +9,17 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50',
-    outline: 'bg-transparent text-blue-600 border border-blue-600 hover:bg-blue-50',
-    danger: 'bg-red-500 text-white hover:bg-red-600',
-    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40',
+    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300 shadow-sm',
+    outline: 'border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400',
+    danger: 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40',
+    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900',
   }
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-xs rounded',
-    md: 'px-4 py-2 text-sm rounded-md',
-    lg: 'px-6 py-3 text-base rounded-md',
+    sm: 'px-4 py-2 text-xs rounded-lg font-medium',
+    md: 'px-6 py-3 text-sm rounded-lg font-medium',
+    lg: 'px-8 py-4 text-base rounded-lg font-medium',
   }
 
   return (

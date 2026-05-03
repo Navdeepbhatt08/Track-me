@@ -25,7 +25,7 @@ export default function SettingsPage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Profile</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Profile</h2>
             <p className="text-sm text-gray-500">Update your personal information</p>
           </div>
         </div>
@@ -50,11 +50,11 @@ export default function SettingsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Currency</label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
               >
                 <option value="INR">INR (₹)</option>
                 <option value="USD">USD ($)</option>
@@ -81,7 +81,7 @@ export default function SettingsPage() {
         </form>
       </Card>
 
-      <Card className="p-6 border-red-200 bg-red-50/30">
+      <Card className="p-6 border-red-500/30 bg-red-500/10">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
             <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@ export default function SettingsPage() {
         </p>
         <Button
           variant="outline"
-          className="text-red-600 border-red-300 hover:bg-red-100 hover:border-red-400"
+          className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
           onClick={() => {
             if (window.confirm('Delete ALL transactions? This cannot be undone.')) {
               clearTransactions()

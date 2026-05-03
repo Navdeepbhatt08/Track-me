@@ -61,7 +61,7 @@ export default function ReportsPage() {
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
         >
           <option value="">All time</option>
           {months.map((m) => (
@@ -125,7 +125,7 @@ export default function ReportsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-5">
-          <h2 className="text-lg font-semibold mb-4">Spending by Category</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Spending by Category</h2>
 
           {data.rows.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No expense data</p>
@@ -137,25 +137,25 @@ export default function ReportsPage() {
                     <div className="flex items-center gap-2">
                       <span className={cx(
                         'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold',
-                        i === 0 ? 'bg-yellow-100 text-yellow-700' :
-                          i === 1 ? 'bg-gray-200 text-gray-700' :
-                            i === 2 ? 'bg-orange-100 text-orange-700' :
-                              'bg-gray-100 text-gray-600'
+                        i === 0 ? 'bg-yellow-500/20 text-yellow-400' :
+                          i === 1 ? 'bg-gray-600 text-gray-300' :
+                            i === 2 ? 'bg-orange-500/20 text-orange-400' :
+                              'bg-gray-700 text-gray-400'
                       )}>
                         {i + 1}
                       </span>
-                      <span className="font-medium">{r.cat}</span>
+                      <span className="font-medium text-gray-900">{r.cat}</span>
                     </div>
                     <span className="text-gray-600">
-                      {formatCurrency(r.amt, settings.currency)} <span className="text-gray-400">({r.pct}%)</span>
+                      {formatCurrency(r.amt, settings.currency)} <span className="text-gray-500">({r.pct}%)</span>
                     </span>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={cx(
                         'h-full rounded-full transition-all duration-700 ease-out',
                         r.pct >= 50 ? 'bg-gradient-to-r from-red-500 to-red-400' :
-                          r.pct >= 25 ? 'bg-gradient-to-r from-blue-600 to-blue-400' :
+                          r.pct >= 25 ? 'bg-gradient-to-r from-blue-500 to-blue-400' :
                             'bg-gradient-to-r from-green-500 to-green-400'
                       )}
                       style={{ width: `${Math.max(3, r.pct)}%` }}
@@ -168,21 +168,21 @@ export default function ReportsPage() {
         </Card>
 
         <Card className="p-5">
-          <h2 className="text-lg font-semibold mb-4">Summary</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Summary</h2>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <div className="flex items-center justify-between py-2 border-b border-gray-200">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
                 <span className="text-gray-600">Transactions</span>
               </div>
               <span className="font-semibold text-gray-900">{data.items.length}</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <div className="flex items-center justify-between py-2 border-b border-gray-200">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className="text-gray-600">Monthly Budget</span>
@@ -191,7 +191,7 @@ export default function ReportsPage() {
             </div>
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
                 <span className="text-gray-600">Remaining</span>
@@ -207,7 +207,7 @@ export default function ReportsPage() {
 
           <div className={cx(
             "mt-4 p-4 rounded-lg text-sm font-medium flex items-center gap-2",
-            data.expense > data.income ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+            data.expense > data.income ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
           )}>
             <span className="text-lg">{data.expense > data.income ? "⚠️" : "✓"}</span>
             {data.expense > data.income

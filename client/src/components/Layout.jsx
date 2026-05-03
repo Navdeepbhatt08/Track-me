@@ -5,8 +5,10 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        {children}
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        <div className="space-y-8">
+          {children}
+        </div>
       </main>
     </div>
   )

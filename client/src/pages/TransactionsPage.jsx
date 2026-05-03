@@ -45,14 +45,14 @@ export default function TransactionsPage() {
 
       <Card className="p-4 mb-6">
         <div className="flex items-center gap-2 mb-3">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
-          <span className="text-sm font-medium text-gray-600">Filters</span>
+          <span className="text-sm font-medium text-gray-700">Filters</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="relative">
-            <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -60,13 +60,13 @@ export default function TransactionsPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search transactions..."
-              className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full pl-9 pr-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all placeholder:text-gray-500"
             />
           </div>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
+            className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
           >
             <option value="all">All Types</option>
             <option value="expense">Expenses</option>
@@ -75,7 +75,7 @@ export default function TransactionsPage() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
+            className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
           >
             <option value="all">All Categories</option>
             {CATEGORIES.map((c) => (
@@ -107,14 +107,14 @@ export default function TransactionsPage() {
                 </tr>
               ) : (
                 filtered.map((t) => (
-                  <tr key={t.id} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors group">
+                  <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors group">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className={cx(
                           'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors',
                           t.type === 'income'
-                            ? 'bg-green-100 text-green-700 group-hover:bg-green-200'
-                            : 'bg-red-100 text-red-700 group-hover:bg-red-200'
+                            ? 'bg-green-100 text-green-600 group-hover:bg-green-200'
+                            : 'bg-red-100 text-red-600 group-hover:bg-red-200'
                         )}>
                           {t.title.charAt(0).toUpperCase()}
                         </div>
@@ -125,14 +125,14 @@ export default function TransactionsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      <span className="px-2 py-1 bg-gray-100 rounded-md text-xs">
+                      <span className="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-700">
                         {t.category}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={cx(
                         'px-2 py-1 text-xs font-medium rounded-full',
-                        t.type === 'income' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'
+                        t.type === 'income' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
                       )}>
                         {t.type}
                       </span>
@@ -148,12 +148,12 @@ export default function TransactionsPage() {
                       <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link
                           to={`/edit/${t.id}`}
-                          className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                          className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                         >
                           Edit
                         </Link>
                         <button
-                          className="text-sm text-red-600 hover:text-red-800 font-medium"
+                          className="text-sm text-red-600 hover:text-red-700 font-medium"
                           onClick={() => {
                             if (window.confirm('Delete this transaction?')) deleteTransaction(t.id)
                           }}
