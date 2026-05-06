@@ -8,9 +8,9 @@ export default function Navbar() {
   const { isAuthed, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm("Logout?")) {
-      logout()
+      await logout()
       navigate('/login')
     }
   }
@@ -29,9 +29,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-18 py-4">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-              <span className="text-white font-bold text-sm">ET</span>
+              <span className="text-white font-bold text-sm">TM</span>
             </div>
-            <span className="font-bold text-gray-900 text-lg">Expense Tracker</span>
+            <span className="font-bold text-gray-900 text-lg">Track Me</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-2">
@@ -103,7 +103,7 @@ export default function Navbar() {
             ))}
             {isAuthed ? (
               <button
-                onClick={() => { setOpen(false); handleLogout(); }}
+                onClick={async () => { setOpen(false); await handleLogout(); }}
                 className="w-full text-left px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-red-600 rounded-lg mx-2 transition-all duration-200"
               >
                 Logout

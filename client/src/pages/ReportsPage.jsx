@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import Card from '../components/ui/Card'
+import Button from '../components/ui/Button'
 import { cx, formatCurrency } from '../lib/utils'
 import { useExpense } from '../state/ExpenseContext'
 
@@ -50,6 +51,45 @@ export default function ReportsPage() {
     return { items, income, expense, rows, total }
   }, [transactions, selectedMonth])
 
+  const downloadReport = () => {
+    const monthLabel = selectedMonth || 'All Time'
+    const csvContent = [
+      ['Expense Tracker Report'],
+      ['Period:', monthLabel],
+      ['Generated:', new Date().toLocaleString()],
+      [],
+      ['Summary'],
+      ['Income:', data.income],
+      ['Expenses:', data.expense],
+      ['Balance:', data.income - data.expense],
+      [],
+      ['Transactions'],
+      ['Date', 'Title', 'Category', 'Type', 'Amount', 'Method', 'Notes'],
+      ...data.items.map(t => [
+        t.date,
+        t.title,
+        t.category,
+        t.type,
+        t.amount,
+        t.method || 'UPI',
+        t.notes || ''
+      ]),
+      [],
+      ['Spending by Category'],
+      ['Category', 'Amount', 'Percentage'],
+      ...data.rows.map(r => [r.cat, r.amt, `${r.pct}%`])
+    ].map(row => row.join(',')).join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', `expense-report-${selectedMonth || 'all-time'}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -58,16 +98,29 @@ export default function ReportsPage() {
           <p className="text-gray-600">View your financial summary</p>
         </div>
 
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
-        >
-          <option value="">All time</option>
-          {months.map((m) => (
-            <option key={m} value={m}>{m}</option>
-          ))}
-        </select>
+        <div className="flex items-center gap-3">
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+          >
+            <option value="">All time</option>
+            {months.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+
+          <Button
+            onClick={downloadReport}
+            variant="primary"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Download Report
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">

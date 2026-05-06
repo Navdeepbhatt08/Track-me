@@ -12,10 +12,13 @@ const connectDB = async () => {
         ? uriRaw.replace("<PASSWORD>", process.env.DATABASE_PASSWORD)
         : uriRaw;
 
+    console.log("Connecting to MongoDB...");
     const conn = await mongoose.connect(uri);
-    console.log("Mongo DB Connected:", conn.connection.host);
+    console.log("MongoDB Connected:", conn.connection.host);
+    console.log("Database Name:", conn.connection.name);
+    console.log("Connection State:", mongoose.connection.readyState === 1 ? "Connected" : "Not Connected");
   } catch (error) {
-    console.log(error.message);
+    console.error("MongoDB Connection Error:", error.message);
     process.exit(1);
   }
 };

@@ -1,5 +1,5 @@
 const express = require('express')
-const ctrl = require('../controllers/authController')
+const ctrl = require('../controllers/settingsController')
 const { requireAuth } = require('../middleware/auth')
 
 const router = express.Router()
@@ -8,10 +8,8 @@ function wrap(fn) {
   return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 }
 
-router.post('/signup', wrap(ctrl.signup))
-router.post('/login', wrap(ctrl.login))
-router.post('/logout', requireAuth, wrap(ctrl.logout))
-router.get('/me', requireAuth, wrap(ctrl.me))
+router.get('/', requireAuth, wrap(ctrl.getSettings))
+router.put('/', requireAuth, wrap(ctrl.updateSettings))
+router.delete('/clear-all', requireAuth, wrap(ctrl.clearAllData))
 
 module.exports = router
-

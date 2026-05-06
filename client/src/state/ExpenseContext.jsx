@@ -1,67 +1,34 @@
-import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react'
-import { loadState, saveState } from '../lib/storage'
+import React, { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react'
+import { transactionsAPI, settingsAPI } from '../lib/api'
 import { formatDateInputValue, uid } from '../lib/utils'
+import { useAuth } from './AuthContext'
 
 const ExpenseContext = createContext(null)
-
-function seedTransactions() {
-  return [
-    {
-      id: uid(),
-      title: 'Groceries',
-      category: 'Food',
-      type: 'expense',
-      amount: 820,
-      method: 'UPI',
-      date: '2026-03-12',
-      notes: '',
-    },
-    {
-      id: uid(),
-      title: 'Bus Pass',
-      category: 'Travel',
-      type: 'expense',
-      amount: 450,
-      method: 'Cash',
-      date: '2026-03-10',
-      notes: '',
-    },
-    {
-      id: uid(),
-      title: 'Freelance',
-      category: 'Salary',
-      type: 'income',
-      amount: 4500,
-      method: 'Bank',
-      date: '2026-03-08',
-      notes: '',
-    },
-    {
-      id: uid(),
-      title: 'Internet',
-      category: 'Bills',
-      type: 'expense',
-      amount: 799,
-      method: 'UPI',
-      date: '2026-03-05',
-      notes: '',
-    },
-  ]
-}
 
 const initialState = {
   settings: {
     currency: 'INR',
-    monthlyBudget: 12000,
-    name: 'Navdeep',
+    monthlyBudget: 50000,
+    name: 'User',
   },
-  transactions: seedTransactions(),
+  transactions: [],
+  loading: false,
+  error: null
 }
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'hydrate': {
-      return action.payload ?? state
+    case 'set_loading': {
+      return { ...state, loading: action.payload }
+    }
+    case 'set_error': {
+      return { ...state, error: action.payload, loading: false }
+    }
+    case 'set_transactions': {
+      return { ...state, transactions: action.payload, loading: false, error: null }
+    }
+    case 'set_settings': {
+      return { ...state, settings: action.payload, loading: false, error: null }
     }
     case 'settings.update': {
       return {
@@ -77,14 +44,14 @@ function reducer(state, action) {
     }
     case 'tx.update': {
       const next = state.transactions.map((t) =>
-        t.id === action.id ? { ...t, ...action.patch } : t,
+        t._id === action.id ? { ...t, ...action.patch } : t,
       )
       return { ...state, transactions: next }
     }
     case 'tx.delete': {
       return {
         ...state,
-        transactions: state.transactions.filter((t) => t.id !== action.id),
+        transactions: state.transactions.filter((t) => t._id !== action.id),
       }
     }
     case 'tx.clear': {
@@ -97,46 +64,119 @@ function reducer(state, action) {
 
 export function ExpenseProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [isInitialized, setIsInitialized] = useState(false)
+  const { isAuthed } = useAuth()
 
+  // Initialize data from API only when authenticated
   useEffect(() => {
-    const persisted = loadState()
-    if (persisted) dispatch({ type: 'hydrate', payload: persisted })
-  }, [])
+    if (!isAuthed) {
+      setIsInitialized(true)
+      return
+    }
 
-  useEffect(() => {
-    saveState(state)
-  }, [state])
+    const initializeData = async () => {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        // Load settings
+        const settingsResponse = await settingsAPI.get()
+        dispatch({ type: 'set_settings', payload: settingsResponse.settings })
+
+        // Load transactions
+        const transactionsResponse = await transactionsAPI.getAll()
+        dispatch({ type: 'set_transactions', payload: transactionsResponse.items })
+
+        setIsInitialized(true)
+      } catch (error) {
+        console.error('Failed to initialize data:', error)
+        dispatch({ type: 'set_error', payload: error.message })
+        setIsInitialized(true)
+      }
+    }
+
+    initializeData()
+  }, [isAuthed])
 
   const api = useMemo(() => {
-    function addTransaction(input) {
-      const tx = {
-        id: uid(),
-        title: String(input.title || '').trim() || 'Untitled',
-        category: String(input.category || 'Other'),
-        type: input.type === 'income' ? 'income' : 'expense',
-        amount: Math.abs(Number(input.amount || 0)),
-        method: String(input.method || 'UPI'),
-        date: String(input.date || formatDateInputValue(new Date())),
-        notes: String(input.notes || ''),
+    async function addTransaction(input) {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        const txData = {
+          title: String(input.title || '').trim() || 'Untitled',
+          category: String(input.category || 'Other'),
+          type: input.type === 'income' ? 'income' : 'expense',
+          amount: Math.abs(Number(input.amount || 0)),
+          method: String(input.method || 'UPI'),
+          date: String(input.date || formatDateInputValue(new Date())),
+          notes: String(input.notes || ''),
+        }
+
+        const response = await transactionsAPI.create(txData)
+        dispatch({ type: 'tx.add', tx: response.item })
+        return response.item
+      } catch (error) {
+        dispatch({ type: 'set_error', payload: error.message })
+        throw error
       }
-      dispatch({ type: 'tx.add', tx })
-      return tx
     }
 
-    function updateTransaction(id, patch) {
-      dispatch({ type: 'tx.update', id, patch })
+    async function updateTransaction(id, patch) {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        const response = await transactionsAPI.update(id, patch)
+        dispatch({ type: 'tx.update', id, patch: response.item })
+        return response.item
+      } catch (error) {
+        dispatch({ type: 'set_error', payload: error.message })
+        throw error
+      }
     }
 
-    function deleteTransaction(id) {
-      dispatch({ type: 'tx.delete', id })
+    async function deleteTransaction(id) {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        await transactionsAPI.delete(id)
+        dispatch({ type: 'tx.delete', id })
+      } catch (error) {
+        dispatch({ type: 'set_error', payload: error.message })
+        throw error
+      }
     }
 
-    function updateSettings(patch) {
-      dispatch({ type: 'settings.update', patch })
+    async function updateSettings(patch) {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        const response = await settingsAPI.update(patch)
+        dispatch({ type: 'set_settings', payload: response.settings })
+        return response.settings
+      } catch (error) {
+        dispatch({ type: 'set_error', payload: error.message })
+        throw error
+      }
     }
 
-    function clearTransactions() {
-      dispatch({ type: 'tx.clear' })
+    async function clearTransactions() {
+      try {
+        dispatch({ type: 'set_loading', payload: true })
+
+        await settingsAPI.clearAllData()
+        dispatch({ type: 'tx.clear' })
+
+        // Reload settings after clearing
+        const settingsResponse = await settingsAPI.get()
+        dispatch({ type: 'set_settings', payload: settingsResponse.settings })
+      } catch (error) {
+        dispatch({ type: 'set_error', payload: error.message })
+        throw error
+      }
+    }
+
+    function clearError() {
+      dispatch({ type: 'set_error', payload: null })
     }
 
     return {
@@ -146,8 +186,10 @@ export function ExpenseProvider({ children }) {
       deleteTransaction,
       updateSettings,
       clearTransactions,
+      clearError,
+      isInitialized
     }
-  }, [state])
+  }, [state, isInitialized])
 
   return <ExpenseContext.Provider value={api}>{children}</ExpenseContext.Provider>
 }

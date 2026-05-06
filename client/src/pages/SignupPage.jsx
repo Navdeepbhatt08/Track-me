@@ -10,7 +10,10 @@ export default function SignupPage() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [agreeTerms, setAgreeTerms] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -18,8 +21,8 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-500/30">
-            <span className="text-white text-2xl font-bold">ET</span>
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-500/30">
+            <span className="text-white text-2xl font-bold">TM</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h1>
           <p className="text-gray-600">Sign up to get started with Expense Tracker</p>
@@ -39,7 +42,12 @@ export default function SignupPage() {
               setError('')
               setLoading(true)
               try {
-                await signup({ name, email, password })
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                  throw new Error('Passwords do not match')
+                }
+
+                await signup({ name, email, password, phone, agreeTerms })
                 navigate('/')
               } catch (err) {
                 setError(err.message || 'Signup failed')
@@ -75,6 +83,38 @@ export default function SignupPage() {
               minLength={6}
               placeholder="Min 6 characters"
             />
+
+            <Input
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              type="password"
+              required
+              placeholder="Re-enter password"
+            />
+
+            <Input
+              label="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              type="tel"
+              placeholder="Enter phone number"
+            />
+
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                required
+              />
+              <label htmlFor="terms" className="text-sm text-gray-600">
+                I agree to the <a href="#" className="text-blue-600 hover:underline">Terms and Conditions</a> and{' '}
+                <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+              </label>
+            </div>
 
             <Button type="submit" variant="primary" className="w-full" disabled={loading}>
               {loading ? 'Creating...' : 'Sign Up'}

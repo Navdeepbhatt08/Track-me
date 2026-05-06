@@ -7,11 +7,10 @@ function httpError(statusCode, message) {
 }
 
 function requireAuth(req, res, next) {
-  const header = req.headers.authorization || ''
-  const [scheme, token] = header.split(' ')
+  const token = req.cookies?.token
 
-  if (scheme !== 'Bearer' || !token) {
-    return next(httpError(401, 'Missing or invalid Authorization header'))
+  if (!token) {
+    return next(httpError(401, 'Authentication required'))
   }
 
   try {

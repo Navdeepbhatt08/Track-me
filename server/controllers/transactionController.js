@@ -21,7 +21,7 @@ function pickTx(body = {}) {
 exports.listTransactions = async (req, res) => {
   const { type, category, q, from, to, limit = 200 } = req.query
 
-  const filter = {}
+  const filter = { userId: req.user.id }
   if (type === 'expense' || type === 'income') filter.type = type
   if (category) filter.category = category
   if (from || to) {
@@ -42,13 +42,15 @@ exports.listTransactions = async (req, res) => {
 }
 
 exports.getTransaction = async (req, res) => {
-  const tx = await Transaction.findById(req.params.id)
+  const tx = await Transaction.findOne({ _id: req.params.id, userId: req.user.id })
   if (!tx) throw httpError(404, 'Transaction not found')
   res.json({ item: tx })
 }
 
 exports.createTransaction = async (req, res) => {
   const tx = pickTx(req.body)
+  tx.userId = req.user.id
+  
   if (!tx.title) throw httpError(400, 'title is required')
   if (!tx.date) throw httpError(400, 'date is required (YYYY-MM-DD)')
   if (!Number.isFinite(tx.amount) || tx.amount <= 0) {
@@ -62,24 +64,28 @@ exports.createTransaction = async (req, res) => {
 exports.updateTransaction = async (req, res) => {
   const patch = pickTx({ ...req.body })
 
-  const updated = await Transaction.findByIdAndUpdate(req.params.id, patch, {
-    new: true,
-    runValidators: true,
-  })
+  const updated = await Transaction.findOneAndUpdate(
+    { _id: req.params.id, userId: req.user.id }, 
+    patch, 
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
 
   if (!updated) throw httpError(404, 'Transaction not found')
   res.json({ item: updated })
 }
 
 exports.deleteTransaction = async (req, res) => {
-  const deleted = await Transaction.findByIdAndDelete(req.params.id)
+  const deleted = await Transaction.findOneAndDelete({ _id: req.params.id, userId: req.user.id })
   if (!deleted) throw httpError(404, 'Transaction not found')
   res.json({ ok: true })
 }
 
 exports.getSummary = async (req, res) => {
   const { month } = req.query // YYYY-MM
-  const match = {}
+  const match = { userId: req.user.id }
   if (month) {
     match.date = { $gte: `${month}-01`, $lte: `${month}-31` }
   }
