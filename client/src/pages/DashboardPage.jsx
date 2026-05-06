@@ -5,20 +5,6 @@ import Button from '../components/ui/Button'
 import { formatCurrency, cx } from '../lib/utils'
 import { useExpense } from '../state/ExpenseContext'
 
-function StatCard({ label, value, type }) {
-  return (
-    <Card className="p-5 cursor-default" hover>
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className={cx(
-        "text-2xl font-bold mt-1",
-        type === 'income' ? 'text-green-600' : type === 'expense' ? 'text-red-600' : 'text-gray-900'
-      )}>
-        {value}
-      </p>
-    </Card>
-  )
-}
-
 export default function DashboardPage() {
   const { state } = useExpense()
   const { transactions, settings } = state
@@ -43,20 +29,68 @@ export default function DashboardPage() {
     const budget = Number(settings.monthlyBudget || 0)
     const budgetUsed = budget > 0 ? Math.min(100, Math.round((expense / budget) * 100)) : 0
 
-    return { income, expense, balance, topCategory, budget, budgetUsed }
-  }, [transactions, settings.monthlyBudget])
+    // Calculate savings goal
+    const monthlySavingsGoal = Number(settings.monthlySavingsGoal || 0) || (budget * 0.2) // Default 20% of budget
+    const currentSavings = Math.max(0, income - expense)
+    const savingsProgress = monthlySavingsGoal > 0 ? Math.min(100, Math.round((currentSavings / monthlySavingsGoal) * 100)) : 0
 
-  const recent = transactions
-    .slice()
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
-    .slice(0, 5)
+    // Calculate monthly data for trends
+    const monthlyData = transactions.reduce((acc, t) => {
+      const month = String(t.date).slice(0, 7)
+      if (!month) return acc
+      if (!acc[month]) acc[month] = { income: 0, expense: 0 }
+      if (t.type === 'income') {
+        acc[month].income += Number(t.amount || 0)
+      } else {
+        acc[month].expense += Number(t.amount || 0)
+      }
+      return acc
+    }, {})
+
+    // Get last two months for trend
+    const sortedMonths = Object.keys(monthlyData).sort().reverse()
+    const currentMonth = sortedMonths[0]
+    const prevMonth = sortedMonths[1]
+    const currentExpense = currentMonth ? monthlyData[currentMonth].expense : 0
+    const prevExpense = prevMonth ? monthlyData[prevMonth].expense : currentExpense
+    const expenseTrend = prevExpense > 0 ? Math.round(((currentExpense - prevExpense) / prevExpense) * 100) : 0
+
+    return { income, expense, balance, topCategory, budget, budgetUsed, expenseTrend, monthlySavingsGoal, currentSavings, savingsProgress }
+  }, [transactions, settings.monthlyBudget, settings.monthlySavingsGoal])
+
+  const recent = useMemo(() => {
+    return transactions
+      .slice()
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+      .slice(0, 5)
+  }, [transactions])
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-gray-600 text-lg">Welcome back, {state.settings.name || 'User'}</p>
-      </div>
+      {/* Welcome Card */}
+      <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 shadow-xl shadow-blue-500/20">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">Welcome back, {state.settings.name || 'User'}! 👋</h1>
+              <p className="text-blue-100 mt-1">
+                You have {stats.balance >= 0 ? 'saved' : 'spent'} {formatCurrency(Math.abs(stats.balance), settings.currency)} this month
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <p className="text-xs text-blue-200 uppercase tracking-wide font-medium">Total Balance</p>
+              <p className="text-3xl font-bold">{formatCurrency(stats.balance, settings.currency)}</p>
+            </div>
+          </div>
+        </div>
+      </Card>
       <div className="flex gap-3 mb-8">
         <Button as={Link} to="/transactions" variant="secondary">
           View All
@@ -66,12 +100,111 @@ export default function DashboardPage() {
         </Button>
       </div>
 
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard label="Balance" value={formatCurrency(stats.balance, settings.currency)} />
-        <StatCard label="Income" value={formatCurrency(stats.income, settings.currency)} type="income" />
-        <StatCard label="Expenses" value={formatCurrency(stats.expense, settings.currency)} type="expense" />
-        <StatCard label="Top Category" value={stats.topCategory} />
+        <Card className="p-6 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg transition-all cursor-default">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gray-600 shadow-lg shadow-gray-500/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Balance</p>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.balance, settings.currency)}</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-gradient-to-br from-green-50 to-white hover:shadow-lg transition-all cursor-default">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-green-500 shadow-lg shadow-green-500/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Income</p>
+              <p className="text-2xl font-bold text-green-600">{formatCurrency(stats.income, settings.currency)}</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-gradient-to-br from-red-50 to-white hover:shadow-lg transition-all cursor-default">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-red-500 shadow-lg shadow-red-500/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expenses</p>
+              <p className="text-2xl font-bold text-red-600">{formatCurrency(stats.expense, settings.currency)}</p>
+              {stats.expenseTrend !== 0 && (
+                <p className={cx(
+                  "text-xs mt-1 font-medium",
+                  stats.expenseTrend > 0 ? 'text-red-600' : 'text-green-600'
+                )}>
+                  {stats.expenseTrend > 0 ? '↑' : '↓'} {Math.abs(stats.expenseTrend)}% vs last month
+                </p>
+              )}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-gradient-to-br from-purple-50 to-white hover:shadow-lg transition-all cursor-default">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-lg shadow-purple-500/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Top Category</p>
+              <p className="text-xl font-bold text-purple-600">{stats.topCategory}</p>
+            </div>
+          </div>
+        </Card>
       </div>
+
+      {/* Savings Goal Card */}
+      <Card className="mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30 flex items-center justify-center">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Savings Goal</h2>
+              <p className="text-sm text-gray-600">Monthly savings target</p>
+            </div>
+          </div>
+          <div className="flex-1 max-w-md">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-600">Progress: <span className="font-semibold text-emerald-600">{stats.savingsProgress}%</span></span>
+              <span className="text-gray-600">Goal: <span className="font-semibold text-gray-900">{formatCurrency(stats.monthlySavingsGoal, settings.currency)}</span></span>
+            </div>
+            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={cx(
+                  "h-full rounded-full transition-all duration-500",
+                  stats.savingsProgress >= 100 ? "bg-gradient-to-r from-emerald-500 to-teal-500" :
+                    stats.savingsProgress >= 50 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" :
+                      "bg-gradient-to-r from-red-400 to-red-500"
+                )}
+                style={{ width: `${Math.min(stats.savingsProgress, 100)}%` }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {stats.currentSavings >= stats.monthlySavingsGoal
+                ? "🎉 Congratulations! You've reached your savings goal!"
+                : `You need ${formatCurrency(stats.monthlySavingsGoal - stats.currentSavings, settings.currency)} more to reach your goal`}
+            </p>
+          </div>
+        </div>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2 p-6">
@@ -140,14 +273,17 @@ export default function DashboardPage() {
           )}
         </Card>
 
-        <Card className="p-6" hover>
+        <Card className="p-6 bg-gradient-to-br from-purple-50 to-white border-purple-100" hover>
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
-              <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-lg shadow-purple-500/30 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Budget</h2>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Budget</h2>
+              <p className="text-xs text-gray-500">Monthly spending limit</p>
+            </div>
           </div>
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-3">

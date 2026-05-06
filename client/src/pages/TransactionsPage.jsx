@@ -7,6 +7,18 @@ import { useExpense } from '../state/ExpenseContext'
 
 const CATEGORIES = ['Food', 'Travel', 'Bills', 'Shopping', 'Health', 'Salary', 'Other']
 
+function monthKey(dateStr) {
+  if (!dateStr) return ''
+  return String(dateStr).slice(0, 7)
+}
+
+function formatMonthLabel(monthKey) {
+  if (!monthKey) return ''
+  const [year, month] = monthKey.split('-')
+  const date = new Date(Number(year), Number(month) - 1)
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
+
 export default function TransactionsPage() {
   const { state, deleteTransaction } = useExpense()
   const { transactions, settings } = state
@@ -14,12 +26,20 @@ export default function TransactionsPage() {
   const [query, setQuery] = useState('')
   const [type, setType] = useState('all')
   const [category, setCategory] = useState('all')
+  const [selectedMonth, setSelectedMonth] = useState('')
+
+  // Get all available months from transactions
+  const availableMonths = useMemo(() => {
+    const months = new Set(transactions.map(t => monthKey(t.date)).filter(Boolean))
+    return Array.from(months).sort().reverse()
+  }, [transactions])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return transactions
       .filter((t) => (type === 'all' ? true : t.type === type))
       .filter((t) => (category === 'all' ? true : t.category === category))
+      .filter((t) => (selectedMonth ? monthKey(t.date) === selectedMonth : true))
       .filter((t) =>
         q
           ? String(t.title).toLowerCase().includes(q) ||
@@ -29,7 +49,18 @@ export default function TransactionsPage() {
       )
       .slice()
       .sort((a, b) => String(b.date).localeCompare(String(a.date)))
-  }, [transactions, query, type, category])
+  }, [transactions, query, type, category, selectedMonth])
+
+  // Group transactions by month
+  const groupedByMonth = useMemo(() => {
+    const groups = {}
+    filtered.forEach(t => {
+      const month = monthKey(t.date)
+      if (!groups[month]) groups[month] = []
+      groups[month].push(t)
+    })
+    return groups
+  }, [filtered])
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -50,7 +81,7 @@ export default function TransactionsPage() {
           </svg>
           <span className="text-sm font-medium text-gray-700">Filters</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
             <svg className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -82,6 +113,16 @@ export default function TransactionsPage() {
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+          >
+            <option value="">All Months</option>
+            {availableMonths.map((m) => (
+              <option key={m} value={m}>{formatMonthLabel(m)}</option>
+            ))}
+          </select>
         </div>
       </Card>
 
@@ -106,63 +147,79 @@ export default function TransactionsPage() {
                   </td>
                 </tr>
               ) : (
-                filtered.map((t) => (
-                  <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors group">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className={cx(
-                          'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors',
-                          t.type === 'income'
-                            ? 'bg-green-100 text-green-600 group-hover:bg-green-200'
-                            : 'bg-red-100 text-red-600 group-hover:bg-red-200'
+                Object.entries(groupedByMonth).map(([month, monthTransactions]) => (
+                  <React.Fragment key={month}>
+                    {/* Month Header */}
+                    <tr className="bg-gray-100">
+                      <td colSpan={6} className="px-4 py-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-700">{formatMonthLabel(month)}</span>
+                          <span className="text-sm text-gray-500">
+                            {monthTransactions.length} transaction{monthTransactions.length !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                    {/* Month Transactions */}
+                    {monthTransactions.map((t) => (
+                      <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors group">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <div className={cx(
+                              'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors',
+                              t.type === 'income'
+                                ? 'bg-green-100 text-green-600 group-hover:bg-green-200'
+                                : 'bg-red-100 text-red-600 group-hover:bg-red-200'
+                            )}>
+                              {t.title.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">{t.title}</p>
+                              <p className="text-xs text-gray-500">{t.method}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span className="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-700">
+                            {t.category}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={cx(
+                            'px-2 py-1 text-xs font-medium rounded-full',
+                            t.type === 'income' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
+                          )}>
+                            {t.type}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{t.date}</td>
+                        <td className={cx(
+                          'px-4 py-3 text-right font-medium',
+                          t.type === 'income' ? 'text-green-600' : 'text-gray-900'
                         )}>
-                          {t.title.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{t.title}</p>
-                          <p className="text-xs text-gray-500">{t.method}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <span className="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-700">
-                        {t.category}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={cx(
-                        'px-2 py-1 text-xs font-medium rounded-full',
-                        t.type === 'income' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
-                      )}>
-                        {t.type}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{t.date}</td>
-                    <td className={cx(
-                      'px-4 py-3 text-right font-medium',
-                      t.type === 'income' ? 'text-green-600' : 'text-gray-900'
-                    )}>
-                      {t.type === 'expense' ? '-' : '+'}{formatCurrency(t.amount, settings.currency)}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link
-                          to={`/edit/${t.id}`}
-                          className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          Edit
-                        </Link>
-                        <button
-                          className="text-sm text-red-600 hover:text-red-700 font-medium"
-                          onClick={() => {
-                            if (window.confirm('Delete this transaction?')) deleteTransaction(t.id)
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                          {t.type === 'expense' ? '-' : '+'}{formatCurrency(t.amount, settings.currency)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Link
+                              to={`/edit/${t.id}`}
+                              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              className="text-sm text-red-600 hover:text-red-700 font-medium"
+                              onClick={() => {
+                                if (window.confirm('Delete this transaction?')) deleteTransaction(t.id)
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
                 ))
               )}
             </tbody>
