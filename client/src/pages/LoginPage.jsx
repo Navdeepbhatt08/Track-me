@@ -20,8 +20,8 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-blue-500/30">
             <span className="text-white text-2xl font-bold">TM</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your account</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">Welcome Back</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Sign in to your account</p>
         </div>
 
         <Card className="p-6 shadow-xl">
@@ -70,10 +70,10 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="w-full h-px bg-gray-300 my-6"></div>
+          <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-6"></div>
           <Link
             to="/signup"
-            className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="block w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-bold"
           >
             Don't have an account? Sign up
           </Link>

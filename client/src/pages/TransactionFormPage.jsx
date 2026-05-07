@@ -16,7 +16,7 @@ export default function TransactionFormPage({ mode = 'add' }) {
 
   const existing = useMemo(() => {
     if (mode !== 'edit') return null
-    return state.transactions.find((t) => t.id === id) ?? null
+    return state.transactions.find((t) => t._id === id) ?? null
   }, [mode, state.transactions, id])
 
   const [form, setForm] = useState(() => {
@@ -55,10 +55,10 @@ export default function TransactionFormPage({ mode = 'add' }) {
             </svg>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               {id ? 'Edit Transaction' : 'Add Transaction'}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {id ? 'Update your transaction details' : 'Record a new transaction'}
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function TransactionFormPage({ mode = 'add' }) {
             onSubmit={(e) => {
               e.preventDefault()
               if (isEdit) {
-                updateTransaction(existing.id, {
+                updateTransaction(existing._id, {
                   title: form.title,
                   category: form.category,
                   type: form.type,
@@ -112,11 +112,11 @@ export default function TransactionFormPage({ mode = 'add' }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
                 <select
                   value={form.category}
                   onChange={(e) => patch({ category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 dark:focus:border-blue-500"
                 >
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -125,8 +125,8 @@ export default function TransactionFormPage({ mode = 'add' }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                <div className="flex rounded-lg border border-gray-300 p-1 bg-white">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type</label>
+                <div className="flex rounded-lg border border-gray-300 dark:border-gray-700 p-1 bg-white dark:bg-gray-800">
                   <button
                     type="button"
                     onClick={() => patch({ type: 'expense' })}
@@ -134,7 +134,7 @@ export default function TransactionFormPage({ mode = 'add' }) {
                       "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200",
                       form.type === 'expense'
                         ? "bg-red-600 text-white shadow-lg"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                     )}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ export default function TransactionFormPage({ mode = 'add' }) {
                       "flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200",
                       form.type === 'income'
                         ? "bg-green-600 text-white shadow-lg"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                     )}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,13 +190,13 @@ export default function TransactionFormPage({ mode = 'add' }) {
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
               <textarea
                 value={form.notes}
                 onChange={(e) => patch({ notes: e.target.value })}
                 placeholder="Add notes about this transaction..."
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all placeholder:text-gray-500 resize-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 dark:focus:border-blue-500 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none"
               />
             </div>
 

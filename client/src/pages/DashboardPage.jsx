@@ -29,12 +29,10 @@ export default function DashboardPage() {
     const budget = Number(settings.monthlyBudget || 0)
     const budgetUsed = budget > 0 ? Math.min(100, Math.round((expense / budget) * 100)) : 0
 
-    // Calculate savings goal
-    const monthlySavingsGoal = Number(settings.monthlySavingsGoal || 0) || (budget * 0.2) // Default 20% of budget
+    const monthlySavingsGoal = Number(settings.monthlySavingsGoal || 0) || (budget * 0.2)
     const currentSavings = Math.max(0, income - expense)
     const savingsProgress = monthlySavingsGoal > 0 ? Math.min(100, Math.round((currentSavings / monthlySavingsGoal) * 100)) : 0
 
-    // Calculate monthly data for trends
     const monthlyData = transactions.reduce((acc, t) => {
       const month = String(t.date).slice(0, 7)
       if (!month) return acc
@@ -47,7 +45,6 @@ export default function DashboardPage() {
       return acc
     }, {})
 
-    // Get last two months for trend
     const sortedMonths = Object.keys(monthlyData).sort().reverse()
     const currentMonth = sortedMonths[0]
     const prevMonth = sortedMonths[1]
@@ -67,7 +64,7 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Welcome Card */}
+
       <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 shadow-xl shadow-blue-500/20">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -77,7 +74,7 @@ export default function DashboardPage() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Welcome back, {state.settings.name || 'User'}! 👋</h1>
+              <h1 className="text-2xl font-bold">Welcome back, {state.settings.name || 'User '} !👋</h1>
               <p className="text-blue-100 mt-1">
                 You have {stats.balance >= 0 ? 'saved' : 'spent'} {formatCurrency(Math.abs(stats.balance), settings.currency)} this month
               </p>
@@ -100,9 +97,8 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <Card className="p-6 bg-gradient-to-br from-gray-50 to-white hover:shadow-lg transition-all cursor-default">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <Card className="p-6 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 hover:shadow-2xl hover:shadow-blue-500/5 transition-all cursor-default">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-gray-600 shadow-lg shadow-gray-500/30 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,13 +106,13 @@ export default function DashboardPage() {
               </svg>
             </div>
             <div>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Balance</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.balance, settings.currency)}</p>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Balance</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{formatCurrency(stats.balance, settings.currency)}</p>
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-green-50 to-white hover:shadow-lg transition-all cursor-default">
+        <Card className="p-6 bg-gradient-to-br from-emerald-50/50 to-white dark:from-emerald-950/20 dark:to-slate-900 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all cursor-default">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-green-500 shadow-lg shadow-green-500/30 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +126,7 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-red-50 to-white hover:shadow-lg transition-all cursor-default">
+        <Card className="p-6 bg-gradient-to-br from-rose-50/50 to-white dark:from-rose-950/20 dark:to-slate-900 hover:shadow-2xl hover:shadow-rose-500/5 transition-all cursor-default">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-red-500 shadow-lg shadow-red-500/30 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,66 +148,17 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-purple-50 to-white hover:shadow-lg transition-all cursor-default">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-lg shadow-purple-500/30 flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Top Category</p>
-              <p className="text-xl font-bold text-purple-600">{stats.topCategory}</p>
-            </div>
-          </div>
-        </Card>
+
       </div>
 
-      {/* Savings Goal Card */}
-      <Card className="mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30 flex items-center justify-center">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">Savings Goal</h2>
-              <p className="text-sm text-gray-600">Monthly savings target</p>
-            </div>
-          </div>
-          <div className="flex-1 max-w-md">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-600">Progress: <span className="font-semibold text-emerald-600">{stats.savingsProgress}%</span></span>
-              <span className="text-gray-600">Goal: <span className="font-semibold text-gray-900">{formatCurrency(stats.monthlySavingsGoal, settings.currency)}</span></span>
-            </div>
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className={cx(
-                  "h-full rounded-full transition-all duration-500",
-                  stats.savingsProgress >= 100 ? "bg-gradient-to-r from-emerald-500 to-teal-500" :
-                    stats.savingsProgress >= 50 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" :
-                      "bg-gradient-to-r from-red-400 to-red-500"
-                )}
-                style={{ width: `${Math.min(stats.savingsProgress, 100)}%` }}
-              />
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              {stats.currentSavings >= stats.monthlySavingsGoal
-                ? "🎉 Congratulations! You've reached your savings goal!"
-                : `You need ${formatCurrency(stats.monthlySavingsGoal - stats.currentSavings, settings.currency)} more to reach your goal`}
-            </p>
-          </div>
-        </div>
-      </Card>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Transactions</h2>
-            <Link to="/transactions" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-              View all
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Recent Activity</h2>
+            <Link to="/transactions" className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-semibold rounded-xl transition-all">
+              View All
             </Link>
           </div>
 
@@ -231,16 +178,16 @@ export default function DashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 text-sm font-medium text-gray-700">Title</th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-700">Category</th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-700">Date</th>
-                    <th className="text-right py-3 text-sm font-medium text-gray-700">Amount</th>
+                  <tr className="border-b border-slate-100 dark:border-slate-800/50">
+                    <th className="text-left py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title</th>
+                    <th className="text-left py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Category</th>
+                    <th className="text-left py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Date</th>
+                    <th className="text-right py-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recent.map((t) => (
-                    <tr key={t.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <tr key={t._id} className="border-b border-slate-50 dark:border-slate-800/30 last:border-0 hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
                       <td className="py-4">
                         <div className="flex items-center gap-3">
                           <div className={cx(
@@ -250,18 +197,18 @@ export default function DashboardPage() {
                             {t.title.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{t.title}</p>
-                            <p className="text-xs text-gray-500">{t.method}</p>
+                            <p className="font-bold text-slate-900 dark:text-white">{t.title}</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">{t.method}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 text-sm">
-                        <span className="px-3 py-1.5 bg-gray-100 rounded-lg text-xs text-gray-700">{t.category}</span>
+                      <td className="py-5 text-sm">
+                        <span className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/50 rounded-lg text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">{t.category}</span>
                       </td>
                       <td className="py-4 text-sm text-gray-600">{t.date}</td>
                       <td className={cx(
                         "py-4 text-right font-semibold",
-                        t.type === 'income' ? 'text-green-600' : 'text-gray-900'
+                        t.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'
                       )}>
                         {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, settings.currency)}
                       </td>
@@ -273,7 +220,7 @@ export default function DashboardPage() {
           )}
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-purple-50 to-white border-purple-100" hover>
+        <Card className="p-8 bg-gradient-to-br from-indigo-50/30 to-white dark:from-indigo-950/20 dark:to-slate-900 border-indigo-100 dark:border-indigo-500/10" hover>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-xl bg-purple-500 shadow-lg shadow-purple-500/30 flex items-center justify-center">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,8 +228,8 @@ export default function DashboardPage() {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Budget</h2>
-              <p className="text-xs text-gray-500">Monthly spending limit</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Budget</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Monthly spending limit</p>
             </div>
           </div>
           <div className="mb-6">
@@ -301,8 +248,8 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex justify-between text-sm mb-6">
-            <span className="text-gray-600">Spent: <span className="font-medium text-gray-900">{formatCurrency(stats.expense, settings.currency)}</span></span>
-            <span className="text-gray-600">Budget: <span className="font-medium text-gray-900">{formatCurrency(stats.budget, settings.currency)}</span></span>
+            <span className="text-gray-600 dark:text-gray-400">Spent: <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(stats.expense, settings.currency)}</span></span>
+            <span className="text-gray-600 dark:text-gray-400">Budget: <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(stats.budget, settings.currency)}</span></span>
           </div>
           <div className={cx(
             "mt-4 p-4 rounded-xl text-sm font-medium",

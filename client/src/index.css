@@ -4,11 +4,12 @@
 
 @layer base {
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-white dark:bg-[#030712] text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-500/30;
+    font-family: 'Inter', sans-serif;
   }
 
   * {
-    @apply transition-colors duration-150;
+    @apply transition-colors duration-300;
   }
 }
 
@@ -30,14 +31,14 @@
   }
 
   .pro-card {
-    @apply rounded-xl shadow-lg border border-gray-200;
+    @apply rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 backdrop-blur-md transition-all duration-300;
   }
 
   .pro-input {
-    @apply rounded-lg border-gray-300 bg-white;
+    @apply rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200;
   }
 
   .pro-button {
-    @apply rounded-lg font-medium;
+    @apply rounded-xl font-semibold;
   }
 }

@@ -6,15 +6,18 @@ import './App.css'
 import App from './App.jsx'
 import { ExpenseProvider } from './state/ExpenseContext.jsx'
 import { AuthProvider } from './state/AuthContext.jsx'
+import { ThemeProvider } from './state/ThemeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <ExpenseProvider>
-          <App />
-        </ExpenseProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ExpenseProvider>
+            <App />
+          </ExpenseProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 )

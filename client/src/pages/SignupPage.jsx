@@ -42,7 +42,7 @@ export default function SignupPage() {
               setError('')
               setLoading(true)
               try {
-                // Validate passwords match
+
                 if (password !== confirmPassword) {
                   throw new Error('Passwords do not match')
                 }

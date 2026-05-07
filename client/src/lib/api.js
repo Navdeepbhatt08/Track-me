@@ -1,13 +1,13 @@
 const API_BASE = 'http://localhost:8000/api'
 
-// Generic API request function - uses cookies for auth
+
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include', // Send cookies with requests
+    credentials: 'include', 
     ...options
   }
 
@@ -109,7 +109,7 @@ export const settingsAPI = {
   }
 }
 
-// Check if user is authenticated by calling the API
+// Check if user is authenticated 
 export const isAuthenticated = async () => {
   try {
     await authAPI.me()
