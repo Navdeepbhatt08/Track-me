@@ -28,7 +28,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 transition-all duration-500 ">
-      <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-none px-6 transition-all duration-300 ">
+      <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-300/50 dark:border-slate-800/50 rounded-[2rem] shadow-[0_3px_10px_rgba(0,0,0,0.1)] dark:shadow-none px-6 transition-all duration-300 ">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">

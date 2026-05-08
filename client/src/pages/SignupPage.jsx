@@ -18,7 +18,7 @@ export default function SignupPage() {
   const [error, setError] = useState('')
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
+    <div className="flex items-center justify-center min-h-screen px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-green-500/30">

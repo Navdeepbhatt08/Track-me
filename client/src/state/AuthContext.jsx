@@ -8,14 +8,13 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Check authentication status on mount using API (cookie-based)
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const response = await authAPI.me()
         setUser(response.user)
       } catch (err) {
-        // Not authenticated or session expired
+        console.log(err);
         setUser(null)
       } finally {
         setLoading(false)

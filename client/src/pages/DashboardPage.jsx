@@ -65,7 +65,7 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto">
 
-      <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 shadow-xl shadow-blue-500/20">
+      <Card className="mb-8 bg-gradient-to-r backdrop-blur-sm from-blue-900 to-blue-700  text-white p-6 shadow-xl shadow-blue-500/20">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">

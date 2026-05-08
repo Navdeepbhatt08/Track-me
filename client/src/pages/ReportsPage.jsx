@@ -20,13 +20,11 @@ export default function ReportsPage() {
   const { transactions, settings } = state
   const [selectedMonth, setSelectedMonth] = useState('')
 
-  // Get all available months
   const months = useMemo(() => {
     const set = new Set(transactions.map((t) => monthKey(t.date)).filter(Boolean))
     return Array.from(set).sort().reverse()
   }, [transactions])
 
-  // Calculate totals for selected month
   const data = useMemo(() => {
     const items = selectedMonth
       ? transactions.filter((t) => monthKey(t.date) === selectedMonth)
@@ -40,7 +38,7 @@ export default function ReportsPage() {
       .filter((t) => t.type === 'expense')
       .reduce((sum, t) => sum + Number(t.amount || 0), 0)
 
-    // Category breakdown
+
     const byCategory = items.reduce((acc, t) => {
       if (t.type !== 'expense') return acc
       const key = t.category || 'Other'
